@@ -22,7 +22,7 @@ classdef ChannelFactory < aod.util.Factory
             switch channelName 
                 case 'ReflectanceImaging'
                     channel = aod.core.Channel('ReflectanceImaging');
-                    channel.setParam('DataFolder', "Ref");
+                    channel.setAttr('DataFolder', "Ref");
                     channel.add(aod.builtin.devices.LightSource( 796,...
                         'Manufacturer', "SuperLum"));
                     if ~isempty(pinhole) && pinhole ~= 20
@@ -38,7 +38,7 @@ classdef ChannelFactory < aod.util.Factory
                         'Manufacturer', "QPhotonics"));
                 case 'MustangImaging'
                     channel = aod.core.Channel('MustangImaging');
-                    channel.setParam('DataFolder', "Vis");
+                    channel.setAttr('DataFolder', "Vis");
                     channel.add(aod.builtin.devices.LightSource(488,...
                         'Manufacturer', "Qioptiq"));
                     channel.add(aod.builtin.devices.BandpassFilter(520, 15));
@@ -49,7 +49,7 @@ classdef ChannelFactory < aod.util.Factory
                     end
                 case 'TopticaImaging'
                     channel = aod.core.Channel('TopticaImaging');
-                    channel.setParam('DataFolder', "Vis");
+                    channel.setAttr('DataFolder', "Vis");
                     channel.add(sara.devices.Toptica(topticaLine));
                     channel.add(aod.builtin.devices.PMT('VisiblePMT',...
                         'Manufacturer', "Hamamatsu", 'Model', "H16722"));
@@ -96,9 +96,9 @@ classdef ChannelFactory < aod.util.Factory
                 channel = obj.addNDF(channel, NDF);
             end
 
-            % Add additional inputs to parameters
+            % Add additional inputs to attributes
             if ~isempty(ip.Unmatched)
-                channel.setParam(ip.Unmatched);
+                channel.setAttr(ip.Unmatched);
             end
         end
     end

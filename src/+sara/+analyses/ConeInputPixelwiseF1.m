@@ -42,10 +42,10 @@ classdef ConeInputPixelwiseF1 < aod.core.Analysis
         function obj = ConeInputPixelwiseF1(varargin)
             obj@aod.core.Analysis('ConeInputPixelwiseF1', varargin{:});
             
-            % If parent Epoch has SampleRate parameter set, override
-            if obj.Parent.hasParam('SampleRate') ...
-                    && ~isempty(obj.Parent.getParam('SampleRate'))
-                obj.setParam('SampleRate', obj.Parent.getParam('SampleRate'));
+            % If parent Epoch has SampleRate attribute set, override
+            if obj.Parent.hasAttr('SampleRate') ...
+                    && ~isempty(obj.Parent.getAttr('SampleRate'))
+                obj.setAttr('SampleRate', obj.Parent.getAttr('SampleRate'));
             end
         end
 
@@ -63,17 +63,17 @@ classdef ConeInputPixelwiseF1 < aod.core.Analysis
             switch lower(whichStim) 
                 case 'siso' 
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Siso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Siso});
                     traces = arrayfun(@(x) x.presentation.B, stimuli, ...
                         'UniformOutput', false);
                 case 'miso'
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Miso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Miso});
                     traces = arrayfun(@(x) x.presentation.G, stimuli, ...
                         'UniformOutput', false);
                 case 'liso'
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Liso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Liso});
                     traces = arrayfun(@(x) x.presentation.R, stimuli, ...
                         'UniformOutput', false);
                 case 'luminance'
@@ -110,9 +110,9 @@ classdef ConeInputPixelwiseF1 < aod.core.Analysis
             fprintf('Beginning analysis of %s\n', whichStim);
 
             
-            % Get the relevant parameters
-            sampleRate = obj.getParam('SampleRate');
-            highPassCutoff = obj.getParam('HighPass');
+            % Get the relevant attributes
+            sampleRate = obj.getAttr('SampleRate');
+            highPassCutoff = obj.getAttr('HighPass');
             
             % Use the first video to determine sizing for preallocation
             imStack = sara.util.loadEpochVideo(epochs(1));
@@ -160,8 +160,8 @@ classdef ConeInputPixelwiseF1 < aod.core.Analysis
     end
 
     methods (Access = protected)
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.core.Analysis(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.core.Analysis(obj);
 
             value.add('HighPass', 0.1, @isnumeric,...
                 'Cutoff for optional highpass filter in Hz');

@@ -2,7 +2,7 @@ function imStack = loadEpochVideo(epoch, varargin)
 % Load epoch video, ensure type is double and apply optional registration
 %
 % Syntax:
-%   imStack = loadEpochVideo(epoch, varargin)
+%   imStack = sara.util.loadEpochVideo(epoch, varargin)
 %
 % Inputs:
 %   epoch           aod.core.Epoch
@@ -30,7 +30,7 @@ function imStack = loadEpochVideo(epoch, varargin)
 
     sift = epoch.get('Registration', {'Name', 'SIFT'});
 
-    fprintf('Loading video... ');
+    fprintf('Loading video for %u... ', epoch.ID);
     reader = aod.util.findFileReader(epoch.getExptFile(videoName));
     imStack = reader.read();
     if ~isa(imStack, 'double')

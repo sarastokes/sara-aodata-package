@@ -7,7 +7,7 @@ classdef ArtifactDetection < aod.core.EpochDataset
 % Constructor:
 %   obj = sara.epochdatasets.ArtifactDetection('Parent', parent, varargin)
 % 
-% Parameters:
+% Attributes:
 %   SampleRate                  25.3
 %       The sample rate in Hz. Will try to extract from Epoch
 %   ArtifactFrequency           0.22
@@ -42,10 +42,10 @@ classdef ArtifactDetection < aod.core.EpochDataset
                     'Optional input "Parent" must be provided');
             end
 
-            % If parent Epoch has SampleRate parameter set, override
-            if obj.Parent.hasParam('SampleRate') ...
-                    && ~isempty(obj.Parent.getParam('SampleRate'))
-                obj.setParam('SampleRate', obj.Parent.getParam('SampleRate'));
+            % If parent Epoch has SampleRate attribute set, override
+            if obj.Parent.hasAttr('SampleRate') ...
+                    && ~isempty(obj.Parent.getAttr('SampleRate'))
+                obj.setAttr('SampleRate', obj.Parent.getAttr('SampleRate'));
             end
 
             obj.setDescription('Dataset shows locations of pixels with significant motion artifact');
@@ -54,10 +54,10 @@ classdef ArtifactDetection < aod.core.EpochDataset
 
     methods 
         function go(obj)
-            % Get the relevant parameters
-            sampleRate = obj.getParam('SampleRate');
-            highCut = obj.getParam('HighPass');
-            artifactFrequency = obj.getParam('ArtifactFrequency');
+            % Get the relevant attributes
+            sampleRate = obj.getAttr('SampleRate');
+            highCut = obj.getAttr('HighPass');
+            artifactFrequency = obj.getAttr('ArtifactFrequency');
 
             % Get the data
             imStack = obj.loadData();
@@ -91,7 +91,7 @@ classdef ArtifactDetection < aod.core.EpochDataset
             % For now, using the simplest approach
             % When there's motion at the edge of a frame, a significant 
             % number of pixels will 0. 
-            obj.omissionMask = obj.clippedPct > obj.getParam('ClipThreshold');
+            obj.omissionMask = obj.clippedPct > obj.getAttr('ClipThreshold');
             fprintf('Epoch %u - %u pixels omitted (%.2f%%)\n',...
                 obj.Parent.ID, nnz(obj.omissionMask),...
                 nnz(obj.omissionMask)/numel(obj.omissionMask));
@@ -108,8 +108,8 @@ classdef ArtifactDetection < aod.core.EpochDataset
     end
 
     methods (Access = protected)
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.core.EpochDataset(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.core.EpochDataset(obj);
 
             value.add('SampleRate', 25.3, @isnumeric,...
                 'Sample rate for data acquisition, in Hz');

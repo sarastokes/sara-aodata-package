@@ -14,7 +14,7 @@ classdef SimilarityRegistration < aod.builtin.registrations.GeometricTransformat
 %   transform
 %   refObj
 %
-% Parameters:
+% Attributes:
 %   OldSSIM
 %   NewSSIM
 %   RegFlag
@@ -39,10 +39,10 @@ classdef SimilarityRegistration < aod.builtin.registrations.GeometricTransformat
             end
 
             if nargin > 3 && ~isempty(quality)
-                obj.setParam('OldSSIM', quality.OldSSIM);
-                obj.setParam('NewSSIM', quality.NewSSIM);
-                obj.setParam('RegFlag', quality.RegFlag);
-                obj.setParam('Warning', quality.Warning);
+                obj.setAttr('OldSSIM', quality.OldSSIM);
+                obj.setAttr('NewSSIM', quality.NewSSIM);
+                obj.setAttr('RegFlag', quality.RegFlag);
+                obj.setAttr('Warning', quality.Warning);
             end
         end
     

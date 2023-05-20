@@ -20,13 +20,13 @@ classdef SiftRegistration < aod.builtin.registrations.RigidRegistration
             obj = obj@aod.builtin.registrations.RigidRegistration(...
                 'SIFT', registrationDate, data, varargin{:});
            
-            obj.setParam('Software', 'ImageJ-SIFTRegistrationPlugin');
+            obj.setAttr('Software', 'ImageJ-SIFTRegistrationPlugin');
         end
     end
 
     methods (Access = protected)
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.builtin.registrations.RigidRegistration(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.builtin.registrations.RigidRegistration(obj);
             
             value.add('ReferenceID', [], @isnumeric,...
                 'Epoch ID used as template for registration');

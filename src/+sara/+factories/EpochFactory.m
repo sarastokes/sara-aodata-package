@@ -34,16 +34,16 @@ classdef EpochFactory < aod.util.Factory
                 ep.setTiming(reader.readFile());
             end
 
-            % Add imaging parameters, if necessary
+            % Add imaging attributes, if necessary
             if ep.hasFile('ImagingParams')
                 reader = sara.readers.EpochParameterReader(ep.getExptFile('ImagingParams'));
                 ep = reader.readFile(ep);
             end
             
-            % Add stimuli defined in epoch parameters
+            % Add stimuli defined in epoch attributes
             if epochType.isPhysiology()
-                if hasParam(ep, 'AOM1')
-                    stim = sara.stimuli.Mustang(ep.getParam('AOM1'));
+                if hasAttr(ep, 'AOM1')
+                    stim = sara.stimuli.Mustang(ep.getAttr('AOM1'));
                     ep.add(stim);
                 end
             end
@@ -60,7 +60,7 @@ classdef EpochFactory < aod.util.Factory
             if epochType == sara.EpochTypes.SPECTRAL
                 protocol = sara.factories.SpectralProtocolFactory.create(...
                     EXPT.get('Calibration', {'Class', 'sara.calibrations.MaxwellianView'}),... 
-                    ep.getParam('StimulusName'));
+                    ep.getAttr('StimulusName'));
                 stim = sara.stimuli.SpectralStimulus(protocol);
                 stim.loadVoltages(ep.getExptFile('LedVoltages'));
                 stim.loadFrames(ep.getExptFile('FrameTable'));
@@ -68,7 +68,7 @@ classdef EpochFactory < aod.util.Factory
             elseif epochType == sara.EpochTypes.SPATIAL
                 protocol = sara.factories.SpatialProtocolFactory.create(...
                     EXPT.getCalibration('sara.calibrations.TopticaNonlinearity'),...
-                    ep.getParam('StimulusName'));
+                    ep.getAttr('StimulusName'));
                 stim = sara.stimuli.SpatialStimulus(protocol);
                 ep.add(stim);
             end

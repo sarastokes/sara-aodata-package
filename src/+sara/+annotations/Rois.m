@@ -32,11 +32,10 @@ classdef Rois < aod.builtin.annotations.Rois
 %   reload(obj)
 %   setImage(obj, im)
 %
-%
 % Protected methods:
 %   setMap(obj, map);
 
-% By Sara Patterson, 2022 (AOData)
+% By Sara Patterson, 2023 (AOData)
 % -------------------------------------------------------------------------
 
     events 
@@ -44,30 +43,17 @@ classdef Rois < aod.builtin.annotations.Rois
     end
 
     properties (SetAccess = protected)
-        % The size of the image used to annotate ROIs
-        Size                {mustBeInteger}
         % Unique identifiers of ROIs
         Metadata            table            = table.empty()
     end
 
     methods
-        function obj = Rois(name, rois, varargin)
-            ip = aod.util.InputParser();
-            addParameter(ip, 'Size', [], @isnumeric);
-            parse(ip, varargin{:});
+        function obj = Rois(name, roiFileName, imSize, varargin)
+            fileReader = aod.builtin.readers.ImageJRoiReader(rois, imSize);
+            obj = obj@aod.builtin.annotations.Rois(name, rois,...
+                'Reader', fileReader, varargin{:});
 
-            if istext(rois) && endsWith(rois, '.zip')
-                if isempty(ip.Results.Size)
-                    error('Rois:NoSizeSpecified',...
-                        'Must specify Size to use ImageJRoiReader');
-                end
-                rois = aod.builtin.readers.ImageJRoiReader(rois, ip.Results.Size);
-            end
-            obj = obj@aod.builtin.annotations.Rois(name, rois, varargin{:});
-            
-            if ~isempty(ip.Results.Size)
-                obj.Size = ip.Results.Size;
-            end
+            obj.setAttr('Size', imSize);
         end
     end
 
@@ -147,10 +133,7 @@ classdef Rois < aod.builtin.annotations.Rois
         end
 
         function setRoiUIDs(obj, roiUIDs)
-            % SETROIUIDS
-            %
-            % Description:
-            %   Assign a table to the roiUIDs property
+            % Assign a table or array to the roiUIDs property
             %
             % Syntax:
             %   obj.setRoiUIDs(roiUIDs)
@@ -209,6 +192,15 @@ classdef Rois < aod.builtin.annotations.Rois
                     repmat("", [obj.numRois, 1]),...
                     'VariableNames', {'ID', 'UID'});
             end
+        end
+    end
+
+    methods (Access = protected)
+        function p = specifyAttributes(obj)
+            p = specifyAttributes@aod.builtin.annotations.Rois(obj);
+
+            p.addParameter('Size', [], @(x) numel(x) == 2 & isrow(x),...
+                'Image size necessary for ImageJ ROI import');
         end
     end
 end

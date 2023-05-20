@@ -56,7 +56,7 @@ classdef SpectralSequence < sara.protocols.SpectralProtocol
             obj.intensity = ip.Results.Intensity;
             obj.lumNorm = ip.Results.Norm;
 
-            % Override default parameters
+            % Override default attributes
             obj.spectralClass = sara.SpectralTypes.Generic;
 
             % Derived properties

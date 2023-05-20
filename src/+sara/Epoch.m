@@ -18,8 +18,8 @@ classdef Epoch < aod.core.Epoch
 %   Registrations       aod.core.Registration
 %   Responses           aod.core.Response
 %   Stimuli             aod.core.Stimuli
-%   epochParameters     aod.util.Parameters
-%   files               aod.util.Parameters
+%   attributes          aod.util.Attributes
+%   files               aod.util.Attributes
 % Dependent properties:
 %   transform           aod.builtin.registrations.RigidRegistration
 %
@@ -191,8 +191,8 @@ classdef Epoch < aod.core.Epoch
             value = [obj.Parent.label, '#', int2fixedwidthstr(obj.ID, 4)];
         end
 
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.core.Epoch(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.core.Epoch(obj);
 
             value.add('Defocus', [], @isnumeric,...
                 'The AO defocus during the Epoch');

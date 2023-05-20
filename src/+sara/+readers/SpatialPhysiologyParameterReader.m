@@ -21,7 +21,7 @@ classdef SpatialPhysiologyParameterReader < sara.readers.EpochParameterReader
             ep = readFile@sara.readers.EpochParameterReader(obj, ep);
 
             % If it's spectral physiology, then we know AOM1 was Mustang
-            stim = sara.stimuli.Mustang(ep.getParam('AOM1'));
+            stim = sara.stimuli.Mustang(ep.getAttr('AOM1'));
             ep.addStimulus(stim);
 
             ep.setFile('StimVideoName', obj.readProperty('Stimulus video = '));
@@ -31,10 +31,10 @@ classdef SpatialPhysiologyParameterReader < sara.readers.EpochParameterReader
             txt = obj.readProperty('Stimulus location in linear stabilized space = ');
             txt = erase(txt, '('); txt = erase(txt, ')');
             txt = strsplit(txt, ', ');
-            ep.setParam('StimulusLocation', [str2double(txt{1}), str2double(txt{2})]);
+            ep.setAttr('StimulusLocation', [str2double(txt{1}), str2double(txt{2})]);
             
             % Power modulation 
-            ep.setParam('PowerModulation', obj.readYesNo('Stimulus power modulation = '));
+            ep.setAttr('PowerModulation', obj.readYesNo('Stimulus power modulation = '));
         end
     end
 

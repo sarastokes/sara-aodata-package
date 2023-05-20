@@ -54,10 +54,10 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
                     'Optional input "Parent" must be provided');
             end
             
-            % If parent Epoch has SampleRate parameter set, override
-            if obj.Parent.hasParam('SampleRate') ...
-                    && ~isempty(obj.Parent.getParam('SampleRate'))
-                obj.setParam('SampleRate', obj.Parent.getParam('SampleRate'));
+            % If parent Epoch has SampleRate attribute set, override
+            if obj.Parent.hasAttr('SampleRate') ...
+                    && ~isempty(obj.Parent.getAttr('SampleRate'))
+                obj.setAttr('SampleRate', obj.Parent.getAttr('SampleRate'));
             end
 
             % Extract cone contrasts from calibration
@@ -68,7 +68,7 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
                 coneContrasts(1) = cal.stimPowers.L(1);
                 coneContrasts(2) = cal.stimPowers.M(2);
                 coneContrasts(3) = cal.stimPowers.S(3);
-                obj.setParam('ConeContrasts', coneContrasts);
+                obj.setAttr('ConeContrasts', coneContrasts);
             end
         end
 
@@ -90,7 +90,7 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
             parse(ip, varargin{:});
             plotFlag = ip.Results.Plot;
             if ip.Results.UseThreshold
-                threshold = obj.getParam('Threshold');
+                threshold = obj.getAttr('Threshold');
             else
                 threshold = [];
             end
@@ -98,7 +98,7 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
             % Get data and scale by cone contrast of stimulus
             snrMap = [];
             cones = {'liso', 'miso', 'siso'};
-            coneContrasts = obj.getParam('ConeContrasts');
+            coneContrasts = obj.getAttr('ConeContrasts');
             contrastScaler = coneContrasts ./ min(coneContrasts);
             for i = 1:3
                 iData = obj.normalize(cones{i}, ip.Unmatched);
@@ -158,7 +158,7 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
             end
             
             % Threshold (cutoff in SDs)
-            % threshold = obj.getParam('Threshold');
+            % threshold = obj.getAttr('Threshold');
             % cdata(cdata < threshold) = 0;
 
             if plotFlag
@@ -185,11 +185,11 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
             epochs = obj.findEpochsAndStimuli(whichStim);
             fprintf('Beginning analysis of %s\n', whichStim);
 
-            % Get the relevant parameters
-            sampleRate = obj.getParam('SampleRate');
-            highPassCutoff = obj.getParam('HighPass');
-            temporalFrequency = obj.getParam('TemporalFrequency');
-            noiseWindow = obj.getParam('NoiseFrequencyWindow');
+            % Get the relevant attributes
+            sampleRate = obj.getAttr('SampleRate');
+            highPassCutoff = obj.getAttr('HighPass');
+            temporalFrequency = obj.getAttr('TemporalFrequency');
+            noiseWindow = obj.getAttr('NoiseFrequencyWindow');
 
             % Use the first video to determine sizing for preallocation
             imStack = sara.util.loadEpochVideo(epochs(1));
@@ -236,13 +236,13 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
             switch lower(whichStim) 
                 case 'siso' 
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Siso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Siso});
                 case 'miso'
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Miso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Miso});
                 case 'liso'
                     stimuli = obj.Parent.get('Stimulus',... 
-                        {'Param', 'spectralClass', sara.SpectralTypes.Liso});
+                        {'Attr', 'spectralClass', sara.SpectralTypes.Liso});
                 case 'luminance'
                     stimuli = obj.Parent.get('Stimulus',... 
                         {'Dataset', 'protocolName', @(x) contains(x, 'luminance')});
@@ -253,8 +253,8 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
 
             % Assign temporal frequency if user did not assign
             % Note this cannot be extracted from the control stimulus
-            if isempty(obj.getParam('TemporalFrequency'))
-                obj.setParam('temporalFrequency', stimuli(1).getParam('temporalFrequency'));
+            if isempty(obj.getAttr('TemporalFrequency'))
+                obj.setAttr('temporalFrequency', stimuli(1).getAttr('temporalFrequency'));
             end
 
             if isempty(stimuli)
@@ -268,8 +268,8 @@ classdef ConeInputPixelwiseSNR < aod.core.Analysis
     
 
     methods (Access = protected)
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.core.Analysis(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.core.Analysis(obj);
 
             value.add('SampleRate', 25.3, @isnumeric,...
                 'Sample rate for data acquisition, in Hz');

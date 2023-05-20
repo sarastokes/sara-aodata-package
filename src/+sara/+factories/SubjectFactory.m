@@ -137,7 +137,7 @@ classdef SubjectFactory < aod.util.Factory
                     else
                         subjectEye = aod.builtin.sources.primate.Eye('OS',...
                             'AxialLength', 16.97, nhpProps{:});
-                        subjectEye.setParam('ContactLens', "12.2mm/5.8mm/plano");
+                        subjectEye.setAttr('ContactLens', "12.2mm/5.8mm/plano");
                         subjectEye.assignUUID("5e8118e0-a165-4c4f-a261-47fb31e9059c");
                         animal.add(subjectEye);
                         

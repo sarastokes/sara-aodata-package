@@ -132,7 +132,7 @@ classdef (Abstract) SpectralProtocol < aod.builtin.protocols.StimulusProtocol
                 fName = [fName(1:end-4), dateText, '.txt'];
             end
             ledValues = obj.mapToStimulator();
-            sara.util.makeLEDStimulusFile(fName, ledValues);
+            sara.util.makeLEDStimulusFile(fName, ledValues, obj.Calibration);
         end     
 
         function fName = getFileName(obj) %#ok<MANU> 

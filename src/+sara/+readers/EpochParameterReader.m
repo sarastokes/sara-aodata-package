@@ -11,7 +11,7 @@ classdef EpochParameterReader < aod.util.readers.TxtReader
 %   obj = EpochParameterReader(fileName)
 %
 % Notes:
-%   readFile() requires an Epoch as an input - parameters will be directly
+%   readFile() requires an Epoch as an input - attributes will be directly
 %   assigned to the epoch to reduce complexity of passing them back
 % -------------------------------------------------------------------------
 
@@ -28,31 +28,31 @@ classdef EpochParameterReader < aod.util.readers.TxtReader
             % Additional file names
             ep.setFile('TrialFile', obj.readText('Trial file name = '));
             txt = strsplit(ep.files('TrialFile'), filesep);
-            ep.setParam('StimulusName', txt{end});
+            ep.setAttr('StimulusName', txt{end});
 
             txt = obj.readText('Scanner FOV = ');
             txt = erase(txt, ' (496 lines) degrees');
             txt = strsplit(txt, ' x ');
-            ep.setParam('FieldOfView', [str2double(txt{1}), str2double(txt{2})]);
+            ep.setAttr('FieldOfView', [str2double(txt{1}), str2double(txt{2})]);
 
             % Imaging window
             x = obj.readNumber('ImagingWindowX = ');
             y = obj.readNumber('ImagingWindowY = ');
             dx = obj.readNumber('ImagingWindowDX = ');
             dy = obj.readNumber('ImagingWindowDY = ');
-            ep.setParam('ImagingWindow', [x y dx dy]);
+            ep.setAttr('ImagingWindow', [x y dx dy]);
 
             
             % Channel parameters
-            ep.setParam('RefGain', obj.readNumber('ADC channel 1, gain = '));
-            ep.setParam('VisGain', obj.readNumber('ADC channel 2, gain = '));
-            ep.setParam('RefOffset', obj.readNumber('ADC channel 1, offset = '));
-            ep.setParam('VisOffset', obj.readNumber('ADC channel 2, offset = '));
-            ep.setParam('RefPmtGain', obj.readNumber('Reflectance PMT gain  = '));
-            ep.setParam('VisPmtGain', obj.readNumber('Fluorescence PMT gain = '));
-            ep.setParam('AOM1', obj.readNumber('AOM_VALUE1 = '));
-            ep.setParam('AOM2', obj.readNumber('AOM_VALUE2 = '));
-            ep.setParam('AOM3', obj.readNumber('AOM_VALUE3 = '));
+            ep.setAttr('RefGain', obj.readNumber('ADC channel 1, gain = '));
+            ep.setAttr('VisGain', obj.readNumber('ADC channel 2, gain = '));
+            ep.setAttr('RefOffset', obj.readNumber('ADC channel 1, offset = '));
+            ep.setAttr('VisOffset', obj.readNumber('ADC channel 2, offset = '));
+            ep.setAttr('RefPmtGain', obj.readNumber('Reflectance PMT gain  = '));
+            ep.setAttr('VisPmtGain', obj.readNumber('Fluorescence PMT gain = '));
+            ep.setAttr('AOM1', obj.readNumber('AOM_VALUE1 = '));
+            ep.setAttr('AOM2', obj.readNumber('AOM_VALUE2 = '));
+            ep.setAttr('AOM3', obj.readNumber('AOM_VALUE3 = '));
         end
     end
 

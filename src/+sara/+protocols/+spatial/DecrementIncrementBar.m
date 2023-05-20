@@ -38,7 +38,7 @@ classdef DecrementIncrementBar < sara.protocols.spatial.DecrementIncrement
             obj.orientation = ip.Results.Orientation;
             obj.barID = ip.Results.BarID;
 
-            % Derived parameters
+            % Derived attributes
             switch obj.orientation
                 case 'vertical'
                     obj.barSize = floor(obj.canvasSize(1)/obj.numBars);

@@ -21,7 +21,7 @@ classdef SpectralPhysiologyParameterReader < sara.readers.EpochParameterReader
             epoch = readFile@sara.readers.EpochParameterReader(obj, epoch);
 
             % If it's spectral physiology, then we know AOM1 was Mustang
-            stim = sara.stimuli.Mustang(epoch.getParam('AOM1'));
+            stim = sara.stimuli.Mustang(epoch.getAttr('AOM1'));
             epoch.addStimulus(stim);
 
             % Reflectance window
@@ -29,11 +29,11 @@ classdef SpectralPhysiologyParameterReader < sara.readers.EpochParameterReader
             y = obj.readNumber('ReflectanceWindowY = ');
             dx = obj.readNumber('ReflectanceWindowDX = ');
             dy = obj.readNumber('ReflectanceWindowDY = ');
-            epoch.setParam('ReflectanceWindow', [x y dx dy]);
+            epoch.setAttr('ReflectanceWindow', [x y dx dy]);
 
             % LED stimulus specifications
-            epoch.setParam('LedInterval', obj.readNumber('Interval value = '));
-            epoch.setParam('LedIntervalUnit', obj.readText('Interval unit = '));
+            epoch.setAttr('LedInterval', obj.readNumber('Interval value = '));
+            epoch.setAttr('LedIntervalUnit', obj.readText('Interval unit = '));
             
             % LUT files (may not be necessary with Calibration class)
             epoch.setFile('LUT1', obj.readText('LUT1 = '));

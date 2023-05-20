@@ -50,7 +50,7 @@ classdef PulseBar < sara.protocols.spatial.Pulse
             assert(obj.barID > 0 & obj.barID <= obj.numBars,...
                 'BarID must be between 1 and NumBars!');
 
-            % Derived parameters
+            % Derived attributes
             switch obj.orientation
                 case 'vertical'
                     obj.barWidth = floor(obj.canvasSize(1)/obj.numBars);

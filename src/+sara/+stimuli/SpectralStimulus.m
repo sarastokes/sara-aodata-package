@@ -1,23 +1,31 @@
 classdef SpectralStimulus < aod.builtin.stimuli.VisualStimulus
-% SPECTRALSTIMULUS
+% A spatially-uniform visual stimulus presented with 3 primaries
+%
+% Parent:
+%   aod.builtin.stimuli.VisualStimulus
 %
 % Constructor:
 %   obj = SpectralStimulus(parent, protocol, presentation)
 %
-% Properties:
-%   presentation
-%   voltages
-% Inherited properties:
-%   stimParameters
-%
-% Methods:
-%   importStimulusFiles(obj)
+% See also:
+%   sara.calibrations.MaxwellianView
 % -------------------------------------------------------------------------
 
     properties (SetAccess = private)
+        % LED voltages at each sample time (V)
         presentation
-        frameRate
+        % LED voltages at each stimulus update (V)
         voltages
+        % Frame rate calculated from frame times (Hz)
+        frameRate
+    end
+
+    % Derived properties
+    properties (SetAccess = protected)
+        % Background intensity (uW)
+        intensityMean
+        % Minimum and maximum intensity (uW)
+        intensityRange
     end
 
     methods
@@ -41,20 +49,50 @@ classdef SpectralStimulus < aod.builtin.stimuli.VisualStimulus
 
         function loadFrames(obj, fName)
             % Get the LED values during each frame
+            %
+            % Syntax:
+            %   loadFrames(obj, fName)
             % -------------------------------------------------------------
             reader = sara.readers.LedFrameTableReader(fName);
             obj.setPresentation(reader.readFile());
             obj.setFrameRate(reader.frameRate);
+            obj.setFile('FrameLedVoltages', fName);
+
+            if isempty(obj.intensityMean)
+                obj.getStimulusPower();
+            end
         end
 
         function loadVoltages(obj, fName)
-            % IMPORTVOLTAGES
-            %
-            % Description:
-            %   Get the command voltages in LED timing
+            % Get the command voltages in LED timing
             % -------------------------------------------------------------
             reader = sara.readers.LedVoltageReader(fName);
             obj.setVoltages(reader.readFile());
+            obj.setFile('FrameLedVoltages', fName);
+
+            if isempty(obj.intensityMean)
+                obj.getStimulusPower();
+            end
+        end
+    end
+
+    methods (Access = protected)
+        function getStimulusPower(obj)
+            if isempty(obj.Calibration)
+                warning('getStimulusPower:NoCalibrationFound',...
+                    'Calibration must be set to determine power');
+                return
+            end
+
+            if isempty(obj.presentation)
+                RGB = obj.voltages;
+            else
+                RGB = obj.presentation;
+            end 
+
+            % Assume the first voltage is the background intensity
+            
+
         end
     end
 end

@@ -74,13 +74,13 @@ classdef Dff < aod.builtin.responses.RegionResponse
             % Add to Response
             obj.setData(signals);
             obj.setTiming(F.Timing);
-            obj.setParam(ip.Results);
+            obj.setAttr(ip.Results);
         end
     end
 
     methods (Access = protected)
-        function value = getExpectedParameters(obj)
-            value = getExpectedParameters@aod.builtin.responses.RegionResponse(obj);
+        function value = specifyAttributes(obj)
+            value = specifyAttributes@aod.builtin.responses.RegionResponse(obj);
 
             value.add('Baseline', [], @(x) numel(x) == 2 & isnumeric(x),...
                 'Start and stop frame for baseline region');
