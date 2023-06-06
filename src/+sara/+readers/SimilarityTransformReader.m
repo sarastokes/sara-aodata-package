@@ -1,11 +1,11 @@
-classdef SimilarityTransformReader < aod.util.FileReader 
+classdef SimilarityTransformReader < aod.common.FileReader 
 % SIMILARITYTRANSFORMREADER
 %
 % Description:
 %   Reads in a structure of similarity transforms (simtform2d)
 %
 % Parent:
-%   aod.util.FileReader
+%   aod.common.FileReader
 %
 % Constructor:
 %   obj = SimilarityTransformReader(fileName)
@@ -26,13 +26,13 @@ classdef SimilarityTransformReader < aod.util.FileReader
 
     methods
         function obj = SimilarityTransformReader(fName)
-            obj = obj@aod.util.FileReader(fName);
+            obj = obj@aod.common.FileReader(fName);
 
             obj.readFile()
         end
     end
 
-    % Overloaded methods from aod.util.FileReader
+    % Overloaded methods from aod.common.FileReader
     methods 
         function out = readFile(obj)
             % READ

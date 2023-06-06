@@ -136,9 +136,9 @@ classdef ConeInputSNR < aod.core.Analysis
         end
     end
 
-    methods (Access = protected)
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.core.Analysis(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.core.Analysis();
 
             value.add('SampleRate', 25.3, @isnumeric,...
                 'Sample rate for data acquisition, in Hz');

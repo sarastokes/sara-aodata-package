@@ -1,4 +1,4 @@
-classdef SpatialFrameTableReader < aod.util.FileReader
+classdef SpatialFrameTableReader < aod.common.FileReader
 
     properties (SetAccess = protected)
         frameRate
@@ -6,7 +6,7 @@ classdef SpatialFrameTableReader < aod.util.FileReader
 
     methods 
         function obj = SpatialFrameTableReader(fName)
-            obj = obj@aod.util.FileReader(fName);
+            obj = obj@aod.common.FileReader(fName);
         end
 
         function out = readFile(obj)

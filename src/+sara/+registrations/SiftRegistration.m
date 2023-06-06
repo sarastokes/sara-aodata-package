@@ -24,9 +24,9 @@ classdef SiftRegistration < aod.builtin.registrations.RigidRegistration
         end
     end
 
-    methods (Access = protected)
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.builtin.registrations.RigidRegistration(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.builtin.registrations.RigidRegistration();
             
             value.add('ReferenceID', [], @isnumeric,...
                 'Epoch ID used as template for registration');

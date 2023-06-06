@@ -1,11 +1,11 @@
-classdef LedVoltageReader < aod.util.FileReader
+classdef LedVoltageReader < aod.common.FileReader
 % LEDVOLTAGEREADER
 %
 % Description:
 %   Reads LED voltage json file generated for arbitrary LED presentations
 %
 % Parent:
-%   aod.util.FileReader
+%   aod.common.FileReader
 %
 % Constructor:
 %   obj = sara.readers.LedVoltageReader(fName)
@@ -13,7 +13,7 @@ classdef LedVoltageReader < aod.util.FileReader
 
     methods
         function obj = LedVoltageReader(fName)
-            obj = obj@aod.util.FileReader(fName);
+            obj = obj@aod.common.FileReader(fName);
         end
 
         function out = readFile(obj)

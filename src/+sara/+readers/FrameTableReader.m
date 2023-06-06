@@ -1,11 +1,11 @@
-classdef FrameTableReader < aod.util.FileReader 
+classdef FrameTableReader < aod.common.FileReader 
 % FRAMETABLEREADER
 %
 % Description:
 %   Read first 3 columns of frame table .csv file and extract timing
 %
 % Parent:
-%   aod.util.FileReader
+%   aod.common.FileReader
 %
 % Constructor:
 %   obj = FrameTableReader(fName)
@@ -19,7 +19,7 @@ classdef FrameTableReader < aod.util.FileReader
 
     methods
         function obj = FrameTableReader(fName)
-            obj = obj@aod.util.FileReader(fName);
+            obj = obj@aod.common.FileReader(fName);
             obj.readFile();
         end
 

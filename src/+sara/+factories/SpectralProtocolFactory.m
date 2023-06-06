@@ -7,7 +7,7 @@ classdef SpectralProtocolFactory < aod.util.Factory
     methods
         function obj = SpectralProtocolFactory(calibration)
             if nargin < 1 || isempty(calibration)
-                calibration = aod.core.calibrations.Empty();
+                calibration = aod.core.Calibration.empty();
             end
             assert(isSubclass(calibration, 'aod.core.Calibration'),...
                 'Initial input must be a aod.core.Calibration subclass');
@@ -29,7 +29,6 @@ classdef SpectralProtocolFactory < aod.util.Factory
                 dateStr = char(dateStr);
                 protocol.dateCreated = datetime(dateStr(2:end), 'Format', 'ddMMMuuuu');
             end
-
         end
     end
 

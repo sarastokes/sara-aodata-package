@@ -18,8 +18,8 @@ classdef Epoch < aod.core.Epoch
 %   Registrations       aod.core.Registration
 %   Responses           aod.core.Response
 %   Stimuli             aod.core.Stimuli
-%   attributes          aod.util.Attributes
-%   files               aod.util.Attributes
+%   attributes          aod.common.KeyValueMap
+%   files               aod.common.KeyValueMap
 % Dependent properties:
 %   transform           aod.builtin.registrations.RigidRegistration
 %
@@ -190,12 +190,14 @@ classdef Epoch < aod.core.Epoch
         function value = getLabel(obj)
             value = [obj.Parent.label, '#', int2fixedwidthstr(obj.ID, 4)];
         end
+    end 
 
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.core.Epoch(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.core.Epoch();
 
             value.add('Defocus', [], @isnumeric,...
-                'The AO defocus during the Epoch');
+                'The AO defocus during the Epoch (diopters)');
         end
     end
 end

@@ -78,9 +78,9 @@ classdef Dff < aod.builtin.responses.RegionResponse
         end
     end
 
-    methods (Access = protected)
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.builtin.responses.RegionResponse(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.builtin.responses.RegionResponse();
 
             value.add('Baseline', [], @(x) numel(x) == 2 & isnumeric(x),...
                 'Start and stop frame for baseline region');

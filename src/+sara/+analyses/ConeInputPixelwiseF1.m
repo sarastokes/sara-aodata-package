@@ -159,9 +159,9 @@ classdef ConeInputPixelwiseF1 < aod.core.Analysis
         end
     end
 
-    methods (Access = protected)
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.core.Analysis(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.core.Analysis();
 
             value.add('HighPass', 0.1, @isnumeric,...
                 'Cutoff for optional highpass filter in Hz');

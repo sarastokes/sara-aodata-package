@@ -195,9 +195,9 @@ classdef Rois < aod.builtin.annotations.Rois
         end
     end
 
-    methods (Access = protected)
-        function p = specifyAttributes(obj)
-            p = specifyAttributes@aod.builtin.annotations.Rois(obj);
+    methods (Static)
+        function p = specifyAttributes()
+            p = specifyAttributes@aod.builtin.annotations.Rois();
 
             p.addParameter('Size', [], @(x) numel(x) == 2 & isrow(x),...
                 'Image size necessary for ImageJ ROI import');

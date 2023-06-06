@@ -44,7 +44,7 @@ classdef EpochTypes
                     obj = sara.EpochTypes.ANATOMYONECHANNEL;
                 case 'anatomy2'
                     obj = sara.EpochTypes.ANATOMYTWOCHANNEL;
-                case 'backgroumd'
+                case 'background'
                     obj = sara.EpochTypes.BACKGROUND;
                 otherwise
                     error('Unrecognized epoch type: %s', eType);

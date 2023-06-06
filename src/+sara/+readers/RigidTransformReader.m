@@ -1,8 +1,8 @@
-classdef RigidTransformReader < aod.util.FileReader
+classdef RigidTransformReader < aod.common.FileReader
 % RIGIDTRANSFORMREADER
 %
 % Parent:
-%   aod.util.FileReader
+%   aod.common.FileReader
 %
 % Constructor:
 %   obj = RigidTransformReader(fullFilePath)
@@ -20,7 +20,7 @@ classdef RigidTransformReader < aod.util.FileReader
 
     methods
         function obj = RigidTransformReader(varargin)
-            obj@aod.util.FileReader(varargin{:});
+            obj@aod.common.FileReader(varargin{:});
         end
         
         function tform = getTransform(obj, ID)

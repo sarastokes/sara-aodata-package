@@ -45,17 +45,21 @@ classdef SawtoothModulation < sara.protocols.SpectralProtocol
 
     methods
         function stim = generate(obj)
-            dt = obj.temporalFrequency/obj.stimRate;
+            % Sawtooth is calculated at 1 Hz and temporal frequency is 
+            % accounted for by adjusting the time scaling. I'm using this 
+            % because there were odd artifacts in the builtin sawtooth 
+            % function so I have a work-around with the Symbolic Math 
+            % Toolbox below that calculates sawtooths only at 1 Hz. 
+            % It's slow, but it's working... might go back and make this 
+            % better at some point.
+            dt = obj.temporalFrequency / obj.stimRate;
             t = dt:dt:obj.stimTime*obj.temporalFrequency;
 
-            W = 1; %/obj.temporalFrequency;
-
             %stim = sawtooth(2 * pi * obj.temporalFrequency * t);
-            % There were odd artifacts in the builtin sawtooth function so
-            % using symbolic math toolbox. Unfortunately, it's slow.
+
             digits(6)
             syms f(x);
-            f(x) = 1/W * (x-fix(x/W));
+            f(x) = x-fix(x);
             stim = double(f(t));
             stim = stim/max(stim);
 

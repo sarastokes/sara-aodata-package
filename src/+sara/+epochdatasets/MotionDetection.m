@@ -100,9 +100,9 @@ classdef MotionDetection < aod.core.EpochDataset
 
     end
 
-    methods (Access = protected)
-        function value = specifyAttributes(obj)
-            value = specifyAttributes@aod.core.EpochDataset(obj);
+    methods (Static)
+        function value = specifyAttributes()
+            value = specifyAttributes@aod.core.EpochDataset();
 
             value.add('OmissionThreshold', 0.5, @(x) iswithin(x,0,1), ...
                 'Pixel omission threshold: % of timepoints at 0');
