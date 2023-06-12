@@ -4,7 +4,7 @@ classdef TopticaNonlinearity < aod.core.Calibration
 % Description:
 %   Nonlinearity in visual stimuli presented with Toptica.
 %
-% Parent:
+% Superclasses:
 %   aod.core.Calibration
 %
 % Syntax:
@@ -21,11 +21,13 @@ classdef TopticaNonlinearity < aod.core.Calibration
 %   wavelengths and baseline Toptica output levels.  The measurement here
 %   was made at 2% on the Toptica and checked in Nov 2021 with other
 %   Toptica output levels.
+
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
     properties (SetAccess = protected)
         Data 
-        laserLine
+        laserLine           double
     end
 
     properties (SetAccess = private)
@@ -33,13 +35,7 @@ classdef TopticaNonlinearity < aod.core.Calibration
     end
 
     methods
-        function obj = TopticaNonlinearity(laserLine, calibrationDate)
-            if nargin < 1
-                laserLine = 561;
-            end
-            if nargin < 2
-                calibrationDate = '20210810';
-            end
+        function obj = TopticaNonlinearity(calibrationDate, laserLine, varargin)
             obj = obj@aod.core.Calibration([], calibrationDate);
             obj.laserLine = laserLine;
         
@@ -58,7 +54,7 @@ classdef TopticaNonlinearity < aod.core.Calibration
         end
         
         function setFitFunction(obj)
-            obj.fitFcn = fit(obj.Data.Value, obj.Data.Power, 'cubicinterp');
+            obj.fitFcn = sara.calibrations.TopticaNonlinearity.getNonlinearityFit(obj);
         end
 
         function stim = applyNonlinearity(obj, stim0)
@@ -89,6 +85,19 @@ classdef TopticaNonlinearity < aod.core.Calibration
 
             stim = uint8(stim - 1);
             stim = reshape(stim, stimSize);
+        end
+    end
+
+    methods (Access = protected)
+        function value = getLabel(obj)
+            value = getLabel@aod.core.Calibration(obj);
+            value = value + sprintf("%unm", obj.laserLine);
+        end
+    end
+
+    methods (Static)
+        function fcn = getNonlinearityFit(obj)
+            fcn = fit(obj.Data.Value, obj.Data.Power, 'cubicinterp');
         end
     end
 end

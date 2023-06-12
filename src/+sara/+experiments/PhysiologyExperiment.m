@@ -161,7 +161,7 @@ classdef PhysiologyExperiment < sara.Experiment
 
     methods (Access = protected)
         function value = getLabel(obj)
-            value = [obj.Sources.label, '_', char(obj.experimentDate)];
+            value = [obj.Sources.label + "_" + string(obj.experimentDate)];
         end
     end
 end

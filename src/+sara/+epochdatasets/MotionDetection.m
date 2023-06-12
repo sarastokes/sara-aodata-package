@@ -1,25 +1,25 @@
 classdef MotionDetection < aod.core.EpochDataset
-    % Detect pixels with motion artifact or zeroed after registration
-    %
-    % Parent:
-    %   aod.core.EpochDataset
-    %
-    % Constructor:
-    %   obj = sara.epochdatasets.MotionArtifact(fileName, varargin)
-    %
-    % Inputs:
-    %   fileName            char/string
-    %       File name to analyze
-    %
-    % Attributes:
-    %   OmissionThreshold               0.5
-    %       The minimum percentage of 0s assigned for omission
-    % Files:
-    %   Data                            []
-    %       File provided for analysis
+% Detect pixels with motion artifact or zeroed after registration
+%
+% Parent:
+%   aod.core.EpochDataset
+%
+% Constructor:
+%   obj = sara.epochdatasets.MotionArtifact(fileName, varargin)
+%
+% Inputs:
+%   fileName            char/string
+%       File name to analyze
+%
+% Attributes:
+%   OmissionThreshold               0.5
+%       The minimum percentage of 0s assigned for omission
+% Files:
+%   Data                            []
+%       File provided for analysis
 
-    % By Sara Patterson, 2023 (sara-aodata-package)
-    % -------------------------------------------------------------------------
+% By Sara Patterson, 2023 (sara-aodata-package)
+% -------------------------------------------------------------------------
 
     properties (SetAccess = protected)
         % Final mask calculated from the previous three
@@ -30,10 +30,10 @@ classdef MotionDetection < aod.core.EpochDataset
 
     methods
         function obj = MotionDetection(varargin)
-            obj@aod.core.EpochDataset("ArtifactDetection", varargin{:});
+            obj@aod.core.EpochDataset("MotionDetection", varargin{:});
             
             % Parent Epoch is required for data file access
-            mustHaveParent(obj);
+            aod.util.mustHaveParent(obj);
             obj.setFile('Data', obj.Parent.getFile('AnalysisVideo'));
 
             % Set a default description

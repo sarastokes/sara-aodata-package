@@ -10,7 +10,7 @@ classdef EpochFactory < aod.util.Factory
             if epochType == sara.EpochTypes.BACKGROUND
                 ep = sara.epochs.BackgroundEpoch(epochID);
             else
-                ep = sara.Epoch(epochID, epochType);
+                ep = sara.epochs.Epoch(epochID, epochType);
             end
             EXPT.add(ep);
 
@@ -31,7 +31,7 @@ classdef EpochFactory < aod.util.Factory
                     reader = sara.readers.FrameTableReader(...
                         ep.getExptFile('FrameTable'));
                 end
-                ep.setTiming(reader.readFile());
+                ep.setTiming(seconds(reader.readFile()));
             end
 
             % Add imaging attributes, if necessary

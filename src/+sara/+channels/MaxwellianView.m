@@ -1,4 +1,18 @@
 classdef MaxwellianView < sara.channels.Channel 
+% Represents the Maxwellian View stimulator on the 1P primate system
+%
+% Superclasses:
+%   sara.channels.Channel
+%
+% Constructor:
+%   obj = sara.channels.MaxwellianView(varargin)
+%
+% Examples:
+%   obj = sara.channels.MaxwellianView('NDF', 0.6);
+%   obj.setStimPositionImage('myimage.png');
+
+% By Sara Patterson, 2023 (sara-aodata-package)
+% -------------------------------------------------------------------------
 
     properties (SetAccess = protected)
         % Image of stimulus location on model eye
@@ -9,9 +23,15 @@ classdef MaxwellianView < sara.channels.Channel
         function obj = MaxwellianView(varargin)
             obj@sara.channels.Channel('MaxwellianView', varargin{:});
 
+            obj.createChannel();
         end
 
         function setStimPositionImage(obj, fName)
+            % Add an image of the stimulus position on the model eye
+            %
+            % Syntax:
+            %   setStimPositionImage(obj, fName)
+            % -------------------------------------------------------------
             if nargin < 2
                 fName = uigetfile();
             end
@@ -30,6 +50,7 @@ classdef MaxwellianView < sara.channels.Channel
                 'Manufacturer', "ThorLabs", 'Model', "M530L4"));
             obj.add(aod.builtin.devices.LightSource(420, ...
                 'Manufacturer', "ThorLabs", 'Model', "M420L4"));
+
             % Add the dichroic filters
             ff470 = aod.builtin.devices.DichroicFilter(470, "high", ...
                 'Manufacturer', "Semrock", 'Model', "FF470-Di01");

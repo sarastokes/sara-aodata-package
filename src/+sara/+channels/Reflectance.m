@@ -1,10 +1,13 @@
 classdef Reflectance < sara.channels.Channel 
 % Reflectance imaging channel
 
+% By Sara Patterson, 2023 (sara-aodata-package)
+% -------------------------------------------------------------------------
+
     methods
         function obj = Reflectance(varargin)
             obj@sara.channels.Channel('ReflectanceImaging', varargin{:});
-
+            
             obj.createChannel();
         end
     end
@@ -15,9 +18,6 @@ classdef Reflectance < sara.channels.Channel
                 'Manufacturer', "SuperLum"));
             obj.add(aod.builtin.devices.PMT('ReflectancePMT',...
                 "Manufacturer", "Hamamatsu"));
-            if isempty(obj.get('Device', {'Name', @(x) contains('Pinhole')}))
-                obj.addPinhole(20);
-            end
         end
     end
 end

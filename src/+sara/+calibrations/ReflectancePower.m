@@ -8,13 +8,16 @@ classdef ReflectancePower < aod.builtin.calibrations.PowerMeasurement
 %   aod.builtin.calibrations.PowerMeasurement
 %
 % Constructor:
-%   obj = ReflectancePower(calibrationDate);
+%   obj = sara.calibrations.ReflectancePower(calibrationDate);
+
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
     methods
-        function obj = ReflectancePower(calibrationDate)
+        function obj = ReflectancePower(calibrationDate, varargin)
             obj = obj@aod.builtin.calibrations.PowerMeasurement(...
-                [], calibrationDate, 796, 'SettingUnit', 'None');
+                [], calibrationDate, 796, ["Setting", "Power"],...
+                ["none", "microwatt"], varargin{:});
         end
     end
 end

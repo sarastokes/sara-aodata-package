@@ -32,7 +32,7 @@ function imStack = loadEpochVideo(epoch, varargin)
 
     fprintf('Loading video for %u... ', epoch.ID);
     reader = aod.util.findFileReader(epoch.getExptFile(videoName));
-    imStack = reader.read();
+    imStack = reader.readFile();
     if ~isa(imStack, 'double')
         imStack = im2double(imStack);
     end

@@ -20,7 +20,7 @@ classdef SiftRegistration < aod.builtin.registrations.RigidRegistration
             obj = obj@aod.builtin.registrations.RigidRegistration(...
                 'SIFT', registrationDate, data, varargin{:});
            
-            obj.setAttr('Software', 'ImageJ-SIFTRegistrationPlugin');
+            obj.setAttr('Software', "ImageJ-SIFTRegistrationPlugin");
         end
     end
 
@@ -32,7 +32,7 @@ classdef SiftRegistration < aod.builtin.registrations.RigidRegistration
                 'Epoch ID used as template for registration');
             value.add('HistogramMatching', false, @islogical,...
                 'Whether Histogram Matching was performed first.');
-            value.add('WhichStack', 'SUM', @isstring);
+            value.add('WhichStack', "SUM", @isstring);
 
             % The default parameters for SIFT, only need to specify if one
             % of the defaults presented in ImageJ is changed
@@ -45,7 +45,7 @@ classdef SiftRegistration < aod.builtin.registrations.RigidRegistration
             value.add('ClosestNextClosestRatio', 4, @isnumeric);
             value.add('MaximalAlignmentRatio', 25, @isnumeric);
             value.add('InlierRatio', 0.05, @isnumeric);
-            value.add('ExpectedTransformation', 'rigid',...
+            value.add('ExpectedTransformation', "rigid",...
                 @(x) ismember(lower(x), ["translation", "rigid", "affine", "similarity"]));
             value.add('Interpolate', true, @islogical);
         end

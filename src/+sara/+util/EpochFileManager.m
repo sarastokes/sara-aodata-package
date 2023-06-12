@@ -215,8 +215,15 @@ classdef EpochFileManager < aod.util.FileManager
         
         function ep = populateAnalysisFiles(~, ep)
             % Files specific to my analysis pipeline
-            ep.setFile('AnalysisVideo', fullfile('Analysis', 'Snapshots',...
+            ep.setFile('AnalysisVideo', fullfile('Analysis', 'Videos',...
                 sprintf('vis_%s.tif', int2fixedwidthstr(ep.ID, 4))));
+        end
+
+        function ep = populateSnapshots(~, ep)
+            ep.setFile('SumProjection', fullfile('Analysis', 'Snapshots',...
+                sprintf('SUM_vis_%s.tif', int2fixedwidthstr(ep.ID, 4))));
+            ep.setFile('StdProjection', fullfile('Analysis', 'Snapshots', ...
+                sprintf('STD_vis_%s.tif', int2fixedwidthstr(ep.ID, 4))));
         end
     end
 end

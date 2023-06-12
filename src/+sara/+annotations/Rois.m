@@ -1,24 +1,21 @@
 classdef Rois < aod.builtin.annotations.Rois
-% ROIS
+% Regions of interest with unique IDs
 % 
 % Description:
-%   ROIs in physiology experiment
+%   ROIs in physiology experiment with UIDs that are consistent between 
+%   different experiments.
 % 
-% Parent:
-%   aod.core.Annotation
+% Superclasses:
+%   aod.builtin.annotations.Rois
 %
 % Constructor:
-%   obj = Rois(name, rois)
-%   obj = Rois(name, rois, 'Size', value, 'Source', source)
+%   obj = sara.annotations.Rois(name, roiFileName, imSize, varargin)
+%   obj = sara.annotations.Rois(name, roiFileName, imSize, 'Source', source)
 %
 % Optional Parameters:
 %   Size            % needed for loading ImageJRois, otherwise calculated
 % Optional Parameters (inherited from aod.core.Annotation):
 %   Source          aod.core.Source
-%
-% Derived Parameters (automatically calculated from Data):
-%   Count
-%   RoiIDs
 %
 % Methods:
 %   ID = parseRoi(obj, ID)
@@ -35,43 +32,59 @@ classdef Rois < aod.builtin.annotations.Rois
 % Protected methods:
 %   setMap(obj, map);
 
-% By Sara Patterson, 2023 (AOData)
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
-
-    events 
-        UpdatedRois
-    end
 
     properties (SetAccess = protected)
         % Unique identifiers of ROIs
-        Metadata            table            = table.empty()
+        metadata            table            = table.empty()
     end
 
     methods
         function obj = Rois(name, roiFileName, imSize, varargin)
-            fileReader = aod.builtin.readers.ImageJRoiReader(rois, imSize);
-            obj = obj@aod.builtin.annotations.Rois(name, rois,...
-                'Reader', fileReader, varargin{:});
-
+            % Constructor
+            %
+            % Syntax:
+            %   obj = sara.annotations.Rois(name, roiFileName, imSize, varargin)
+            % -------------------------------------------------------------
+            fileReader = aod.builtin.readers.ImageJRoiReader(...
+                roiFileName, imSize);
+            obj = obj@aod.builtin.annotations.Rois(name, fileReader, varargin{:});
             obj.setAttr('Size', imSize);
         end
     end
 
     methods
         function load(obj, rois)
+            % Load the ROIs from a file
+            %
+            % Syntax:
+            %   load(obj)
+            % -------------------------------------------------------------
             load@aod.builtin.annotations.Rois(obj, rois);
             obj.setMetadata();
         end
-           
+
         function reload(obj)
+            % Reload the ROIs from a file without disrupting metadata
+            %
+            % Syntax:
+            %   reload(obj)
+            % -------------------------------------------------------------
             reload@aod.builtin.annotations.Rois(obj);
-            notify(obj, 'UpdatedRois');
+            obj.setMetadata();
         end
     end
 
     % Metadata-related methods
     methods
         function ID = parseRoi(obj, ID)
+            % Ensure ROI is valid and in numeric format
+            %
+            % Syntax:
+            %   uid = parseRoi(obj, roiID)
+            % -------------------------------------------------------------
+
             if ischar(ID)
                 ID = string(upper(ID));
             end
@@ -79,88 +92,82 @@ classdef Rois < aod.builtin.annotations.Rois
                 ID = obj.uid2roi(ID);
                 return;
             end
-            assert(ID <= obj.Count, 'ROI is not within count!');
+            assert(ID <= obj.numRois, 'ROI is not within count!');
         end
         
         function roiID = uid2roi(obj, uid)
-            % UID2ROI 
-            % 
-            % Description:
-            %   Given a UID, return the ROI ID. Given ROI ID, return as is
+            % Given a UID, return the ROI ID. Given ROI ID, return as is
             %
             % Syntax:
-            %   uid = obj.roi2uid(roiID)
+            %   uid = roi2uid(obj, roiID)
             % -------------------------------------------------------------
+
             if isnumeric(uid)
                 roiID = uid;
                 return
             end
-            roiID = find(obj.Metadata.UID == uid);
+            roiID = find(obj.metadata.UID == uid);
         end
 
         function uid = roi2uid(obj, roiID)
-            % ROI2UID 
-            % 
-            % Description:
-            %   Given a roi ID, returns the UID. Given a UID, return as is
+            % Given a roi ID, returns the UID. Given a UID, return as is
             %
             % Syntax:
-            %   uid = obj.roi2uid(roiID)
+            %   uid = roi2uid(obj, roiID)
             % -------------------------------------------------------------
+
             if isstring && strlength(3)
                 uid = roiID;
                 return
             end
-            if roiID > height(obj.Metadata)
+            if roiID > height(obj.metadata)
                 error('Roi ID %u not in metadata', roiID);
             end
-            uid = obj.Metadata{roiID, 'UID'};
+            uid = obj.metadata{roiID, 'UID'};
         end
         
         function addRoiUID(obj, roiID, roiUID)
-            % ADDROIUID
-            %
-            % Description:
-            %   Assign a specific roi UID
+            % Assign a specific roi UID
             %
             % Syntax:
-            %   obj.addRoiUID(roiID, UID)
+            %   addRoiUID(obj, roiID, UID)
             % -------------------------------------------------------------
 
-            assert(isstring(roiUID) & strlength(roiUID) == 3, ...
-                'roiUID must be string 3 characters long')
-            obj.Metadata(obj.Metadata.ID == roiID, 'UID') = roiUID;
+            if ~aod.util.isempty(roiUID)
+                assert(isstring(roiUID) & strlength(roiUID) == 3, ...
+                    'roiUID must be empty or a string 3 characters long')
+            end
+            obj.metadata(obj.metadata.ID == roiID, 'UID') = roiUID;
         end
 
         function setRoiUIDs(obj, roiUIDs)
             % Assign a table or array to the roiUIDs property
             %
             % Syntax:
-            %   obj.setRoiUIDs(roiUIDs)
+            %   setRoiUIDs(obj, roiUIDs)
             % -------------------------------------------------------------
-            if isstring(roiUIDs)
-                roiUIDs = roiUIDs(:);
-                assert(numel(roiUIDs) == obj.Count, ...
-                    'Number of UIDs must equal number of ROIs');
-                T = table(rangeCol(1, obj.Count), roiUIDs,...
-                    'VariableNames', {'ID', 'UID'});
-                obj.Metadata = T;
-            elseif istable(roiUIDs)
-                assert(height(roiUIDs) == obj.Count,...
-                    'Number of UIDs must equal number of ROIs');
-                assert(~isempty(cellfind(roiUIDs.Properties.VariableNames, 'UID')),...
-                    'roiUID table must have a column named UID');
-                assert(~isempty(cellfind(roiUIDs.Properties.VariableNames, 'ID')),...
-                    'roiUID table must have a column named ID');
-
-                obj.Metadata = roiUIDs; 
-            else
-                error('Invalid input!');
+            arguments 
+                obj 
+                roiUIDs         table 
             end
-            obj.Metadata = sortrows(obj.Metadata, 'ID');
+
+            assert(height(roiUIDs) == obj.Count,...
+                'Number of UIDs must equal number of ROIs');
+            assert(~isempty(cellfind(roiUIDs.Properties.VariableNames, 'UID')),...
+                'roiUID table must have a column named UID');
+            assert(~isempty(cellfind(roiUIDs.Properties.VariableNames, 'ID')),...
+                'roiUID table must have a column named ID');
+
+            obj.metadata = roiUIDs; 
+            obj.metadata = sortrows(obj.metadata, 'ID');
         end
     
         function clearMetadata(obj)
+            % Clear all the UIDs
+            %
+            % Syntax:
+            %   clearMetadata(obj)
+            % -------------------------------------------------------------
             obj.createMetadata(true);
         end
     end
@@ -170,14 +177,14 @@ classdef Rois < aod.builtin.annotations.Rois
             if isempty(obj.Data)
                 return
             end
-            if ~isempty(obj.Metadata)
+            if ~isempty(obj.metadata)
                 % If there were existing ROIs, make sure to append to  
                 % Metadata rather than erasing existing table
-                newROIs = obj.numRois - height(obj.Metadata);
-                newTable = table(height(obj.Metadata) + rangeCol(1, newROIs),...
+                newROIs = obj.numRois - height(obj.metadata);
+                newTable = table(height(obj.metadata) + rangeCol(1, newROIs),...
                     repmat("", [newROIs, 1]), 'VariableNames', {'ID', 'UID'});
-                newTable = [obj.Metadata; newTable];
-                obj.Metadata = newTable;
+                newTable = [obj.metadata; newTable];
+                obj.metadata = newTable;
             else
                 obj.createMetadata();
             end
@@ -187,8 +194,8 @@ classdef Rois < aod.builtin.annotations.Rois
             if nargin < 2
                 forceOverwrite = false;
             end
-            if isempty(obj.Metadata) || forceOverwrite
-                obj.Metadata = table(rangeCol(1, obj.numRois), ...
+            if isempty(obj.metadata) || forceOverwrite
+                obj.metadata = table(rangeCol(1, obj.numRois), ...
                     repmat("", [obj.numRois, 1]),...
                     'VariableNames', {'ID', 'UID'});
             end
@@ -199,8 +206,16 @@ classdef Rois < aod.builtin.annotations.Rois
         function p = specifyAttributes()
             p = specifyAttributes@aod.builtin.annotations.Rois();
 
-            p.addParameter('Size', [], @(x) numel(x) == 2 & isrow(x),...
+            p.add('Size', [], @(x) numel(x) == 2 & isrow(x),...
                 'Image size necessary for ImageJ ROI import');
+        end
+
+        function d = specifyDatasets(d)
+            d = specifyDatasets@aod.builtin.annotations.Rois(d);
+
+            d.set('metadata',...
+                'Class', 'table',...
+                'Description', 'Unique identifiers of all ROIs');
         end
     end
 end

@@ -1,11 +1,11 @@
-classdef FluorescenceImaging < sara.channels.Channel 
+classdef Fluorescence < sara.channels.Channel 
 % Fluorescence imaging channel for calcium imaging
 %
 % Parent:
 %   sara.channels.Channel
 %
 % Constructor:
-%   obj = sara.channels.FluorescenceImaging(laserName, varargin)
+%   obj = sara.channels.Fluorescence(laserName, varargin)
 %
 % Inputs:
 %   laserName           string
@@ -19,7 +19,7 @@ classdef FluorescenceImaging < sara.channels.Channel
 %
 % Additional key/value inputs are defined in sara.channels.Channel
 
-% 
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
     properties (Constant, Access = private)
@@ -27,7 +27,7 @@ classdef FluorescenceImaging < sara.channels.Channel
     end
 
     methods
-        function obj = FluorescenceImaging(laserName, varargin)
+        function obj = Fluorescence(laserName, varargin)
             obj@sara.channels.Channel('FluorescenceImaging', varargin{:});
 
             laserName = convertCharsToStrings(laserName);
@@ -36,24 +36,24 @@ classdef FluorescenceImaging < sara.channels.Channel
                     'Laser %s not recognized', laserName);
             end
 
-            ip = aod.util.inputParser();
+            ip = aod.util.InputParser();
             addParameter(ip, 'LaserLine', [], @isnumeric);
             parse(ip, varargin{:});
 
             laserLine = ip.Results.LaserLine;
 
-            obj.createChannel(laserLine);
+            obj.createChannel(laserName, laserLine);
         end
     end
 
     methods (Access = protected)
-        function createChannel(obj)        
-            channel.add(aod.builtin.devices.PMT('VisiblePMT', ...
+        function createChannel(obj, laserName, laserLine)        
+            obj.add(aod.builtin.devices.PMT('VisiblePMT', ...
                 'Manufacturer', "Hamamatsu", 'Model', "H16722"));
             if strcmp(laserName, 'Mustang')
                 obj.add(aod.builtin.devices.LightSource(488, ...
                     'Manufacturer', "Qioptiq", 'Model', "Mustang"));
-                obj.addBandpassFilter('520_15');
+                obj.addBandpassFilter('517_20');
             else
                 obj.add(sara.devices.Toptica(laserLine));
             end

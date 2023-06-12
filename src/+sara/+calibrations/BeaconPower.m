@@ -8,12 +8,16 @@ classdef BeaconPower < aod.builtin.calibrations.PowerMeasurement
 %   aod.builtin.calibrations.PowerMeasurement
 %
 % Constructor:
-%   obj = BeaconPower(calibrationDate)
+%   obj = sara.calibrations.BeaconPower(calibrationDate, varargin)
+
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
+
     methods
-        function obj = BeaconPower(calibrationDate)
+        function obj = BeaconPower(calibrationDate, varargin)
             obj = obj@aod.builtin.calibrations.PowerMeasurement(...
-                [], calibrationDate, 847, 'SettingUnit', 'mA');
+                [], calibrationDate, 847, ["Voltage", "Power"],... 
+                ["microampere", "microwatt"], varargin{:});
         end
     end
 end 

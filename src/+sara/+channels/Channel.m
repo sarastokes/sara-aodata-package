@@ -8,12 +8,14 @@ classdef Channel < aod.core.Channel
 %   obj = sara.channels.Channel(name, varargin)
 %
 % Optional key/value inputs:
-%   pinhole             double
+%   Pinhole             double
 %       Diameter in microns
 %   NDF                 double
 %       Neutral density filter attenuation
 %   BandpassFilter      char
 %       Filter name 'wavelength_bandwidth'
+
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
     methods 
@@ -77,8 +79,13 @@ classdef Channel < aod.core.Channel
             ndf = aod.builtin.devices.NeutralDensityFilter(attenuation, ...
                 'Manufacturer', "ThorLabs", ...
                 'Model', sprintf("NE%uA-A", 10 * attenuation));
-            ndf.setTransmission(sara.resources.getResource( ...
-                sprintf('NE%uA.txt', 10 * attenuation)));
+                try
+                    ndf.setTransmission(sara.resources.getResource( ...
+                        sprintf('NE%uA.txt', 10 * attenuation)));
+                catch
+                    warning('addNDF:NoTransmissionFound',...
+                        'No transmission file was found for ND %.2f', attenuation);
+                end
             obj.add(ndf);
         end
 
@@ -99,6 +106,10 @@ classdef Channel < aod.core.Channel
             end
             
             switch filterName 
+                case '517_20'
+                    filter = aod.builtin.devices.BandpassFilter(517, 20,...
+                        'Manufacturer', "Semrock", "Model", "FF01-517/20");
+                    filter.setTransmission(sara.resources.getResource('FF01-517_20.txt'));
                 case '520_15'
                     filter = aod.builtin.devices.BandpassFilter(520, 15, ...
                         'Manufacturer', "Semrock", 'Model', "FF01-520/15");
@@ -115,9 +126,9 @@ classdef Channel < aod.core.Channel
                     filter = aod.builtin.devices.BandpassFilter(607, 70, ...
                         'Manufacturer', "Semrock", 'Model', "FF01-670/20");
                     filter.setTransmission(sara.resources.getResource('FF01-607_70.txt'));
-
                 otherwise
-                    warning('Filter not set. Unrecognized name: %s', filterName);
+                    warning('addBandpassFilter:InvalidFilterName',...
+                        'Filter not set. Unrecognized name: %s', filterName);
                     return
             end
 

@@ -8,7 +8,7 @@ classdef MaxwellianView < aod.core.Calibration
 %   aod.core.Calibration
 %
 % Constructor:
-%   obj = MaxwellianView(calibrationDate)
+%   obj = MaxwellianView(calibrationDate, varargin{:})
 % -------------------------------------------------------------------------
 
     properties (SetAccess = private)
@@ -23,9 +23,9 @@ classdef MaxwellianView < aod.core.Calibration
     end
 
     methods
-        function obj = MaxwellianView(calibrationDate)
-            obj = obj@aod.core.Calibration([], calibrationDate);
-
+        function obj = MaxwellianView(calibrationDate, varargin)
+            obj = obj@aod.core.Calibration("MaxwellianView",... 
+                calibrationDate, varargin{:});
             obj.loadCalibrationFile()
         end
 

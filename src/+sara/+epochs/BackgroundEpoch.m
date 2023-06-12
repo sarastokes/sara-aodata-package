@@ -1,11 +1,11 @@
-classdef BackgroundEpoch < sara.Epoch
+classdef BackgroundEpoch < sara.epochs.Epoch
 % BACKGROUNDEPOCH
 %
 % Description:
 %   An epoch measuring the background noise without stimuli
 %
 % Parent:
-%   sara.Epoch
+%   sara.epochs.Epoch
 %
 % Constructor:
 %   obj = BackgroundEpoch(parent, ID, varargin)
@@ -22,7 +22,7 @@ classdef BackgroundEpoch < sara.Epoch
 
     methods
         function obj = BackgroundEpoch(ID, varargin)
-            obj@sara.Epoch(ID, sara.EpochTypes.BACKGROUND, varargin{:});
+            obj@sara.epochs.Epoch(ID, sara.EpochTypes.BACKGROUND, varargin{:});
         end
     end
 

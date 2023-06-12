@@ -39,7 +39,7 @@ classdef Epoch < aod.core.Epoch
         epochType           sara.EpochTypes
     end
 
-    properties (Hidden, Dependent)
+    properties (Dependent, Access = protected)
         transform           % aod.builtin.registrations.RigidRegistration
     end
 
@@ -188,7 +188,7 @@ classdef Epoch < aod.core.Epoch
         end
 
         function value = getLabel(obj)
-            value = [obj.Parent.label, '#', int2fixedwidthstr(obj.ID, 4)];
+            value = [obj.Parent.label + "#" + int2fixedwidthstr(obj.ID, 4)];
         end
     end 
 
@@ -196,6 +196,8 @@ classdef Epoch < aod.core.Epoch
         function value = specifyAttributes()
             value = specifyAttributes@aod.core.Epoch();
 
+            value.add('SampleRate', [], @isnumeric,...
+                'Rate of data acquisition (Hz)');
             value.add('Defocus', [], @isnumeric,...
                 'The AO defocus during the Epoch (diopters)');
         end

@@ -10,7 +10,7 @@ classdef FrameTableReader < aod.common.FileReader
 % Constructor:
 %   obj = FrameTableReader(fName)
 
-% By Sara Patterson, 2022 (AOData)
+% By Sara Patterson, 2023 (AOData)
 % -------------------------------------------------------------------------
 
     properties (SetAccess = protected)
@@ -38,7 +38,6 @@ classdef FrameTableReader < aod.common.FileReader
             out = out / 1000;
 
             obj.Data = out;
-
             obj.frameRate = 1000/mean(T.TimeInterval);
         end
     end
