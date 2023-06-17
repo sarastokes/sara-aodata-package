@@ -95,7 +95,7 @@ classdef Dff < aod.builtin.responses.RegionResponse
 
     methods (Access = private)
         function bkgd = guessBkgd(obj)
-            if obj.Parent.epochType == sara.EpochTypes.Spatial
+            if obj.Parent.epochType == sara.epochs.EpochTypes.Spatial
                 stim = getByClass(obj.Parent.Stimuli, 'aod.builtin.stimuli.SpatialStimulus');
             else
                 stim = getByClass(obj.Parent.Stimuli, 'aod.builtin.stimuli.SpectralStimulus');

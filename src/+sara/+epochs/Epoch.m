@@ -11,7 +11,7 @@ classdef Epoch < aod.core.Epoch
 %   obj = Epoch(ID, source, epochType)
 %
 % Properties:
-%   epochType           sara.EpochTypes
+%   epochType           sara.epochs.EpochTypes
 % Inherited properties:
 %   ID                  epoch ID
 %   startTime           datetime
@@ -36,7 +36,7 @@ classdef Epoch < aod.core.Epoch
 % -------------------------------------------------------------------------
 
     properties (SetAccess = protected)
-        epochType           sara.EpochTypes
+        epochType           sara.epochs.EpochTypes
     end
 
     properties (Dependent, Access = protected)

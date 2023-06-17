@@ -7,7 +7,7 @@ classdef EpochFactory < aod.util.Factory
 
         function ep = get(~, EXPT, epochID, epochType, source, system)
 
-            if epochType == sara.EpochTypes.BACKGROUND
+            if epochType == sara.epochs.EpochTypes.BACKGROUND
                 ep = sara.epochs.BackgroundEpoch(epochID);
             else
                 ep = sara.epochs.Epoch(epochID, epochType);
@@ -24,7 +24,7 @@ classdef EpochFactory < aod.util.Factory
 
             % Get the epoch timing
             if ep.hasFile('FrameTable')
-                if epochType == sara.EpochTypes.SPATIAL
+                if epochType == sara.epochs.EpochTypes.SPATIAL
                     reader = sara.readers.SpatialFrameTableReader(...
                         ep.getExptFile('FrameTable'));
                 else
@@ -57,7 +57,7 @@ classdef EpochFactory < aod.util.Factory
             end
 
             % Add stimuli, if necessary
-            if epochType == sara.EpochTypes.SPECTRAL
+            if epochType == sara.epochs.EpochTypes.SPECTRAL
                 protocol = sara.factories.SpectralProtocolFactory.create(...
                     EXPT.get('Calibration', {'Class', 'sara.calibrations.MaxwellianView'}),... 
                     ep.getAttr('StimulusName'));
@@ -65,9 +65,9 @@ classdef EpochFactory < aod.util.Factory
                 stim.loadVoltages(ep.getExptFile('LedVoltages'));
                 stim.loadFrames(ep.getExptFile('FrameTable'));
                 ep.add(stim);
-            elseif epochType == sara.EpochTypes.SPATIAL
+            elseif epochType == sara.epochs.EpochTypes.SPATIAL
                 protocol = sara.factories.SpatialProtocolFactory.create(...
-                    EXPT.getCalibration('sara.calibrations.TopticaNonlinearity'),...
+                    EXPT.get('Calibration', {'Class', 'sara.calibrations.TopticaNonlinearity'}),...
                     ep.getAttr('StimulusName'));
                 stim = sara.stimuli.SpatialStimulus(protocol);
                 ep.add(stim);

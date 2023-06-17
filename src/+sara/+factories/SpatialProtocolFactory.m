@@ -33,13 +33,20 @@ classdef SpatialProtocolFactory < aod.util.Factory
             [~, fileName, ~] = fileparts(char(fileName));
 
             % DecIncBar series
-            if contains(fileName, 'mod_bar_')
+            if contains(fileName, 'mod_bar_') || contains(fileName, 'decinc_bar_')
                 [barID, numBars] = obj.extractBarParameters(fileName);
+
+                if contains(fileName, 'horizontal')
+                    orientation = 'horizontal';
+                else
+                    orientation = 'vertical';
+                end
 
                 protocol = DecrementIncrementBar(obj.calibration,...
                     'PreTime', 20, 'StimTime', 40, 'TailTime', 30,...
                     'BaseIntensity', 0.5, 'Contrast', 1,...
-                    'BarID', barID, 'NumBars', numBars, 'Orientation', 'vertical');
+                    'BarID', barID, 'NumBars', numBars,... 
+                    'Orientation', orientation);
                 return
             end
 
@@ -181,6 +188,10 @@ classdef SpatialProtocolFactory < aod.util.Factory
                     protocol = DecrementIncrement(obj.calibration,...
                         'PreTime', 20, 'StimTime', 40, 'TailTime', 30,...
                         'BaseIntensity', 0.5, 'Contrast', 1);
+                case 'intensity_increment_80s_180t'
+                    protocol = Pulse(obj.calibration, ...
+                        'PreTime', 20, 'StimTime', 80, 'TailTime', 80, ...
+                        'BaseIntensity', 0, 'Contrast', 1);
                 otherwise
                     warning('Unrecognized file name %s', fileName);
                     protocol = aod.common.Protocol.empty();

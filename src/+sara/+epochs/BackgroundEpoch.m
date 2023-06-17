@@ -22,7 +22,7 @@ classdef BackgroundEpoch < sara.epochs.Epoch
 
     methods
         function obj = BackgroundEpoch(ID, varargin)
-            obj@sara.epochs.Epoch(ID, sara.EpochTypes.BACKGROUND, varargin{:});
+            obj@sara.epochs.Epoch(ID, sara.epochs.EpochTypes.BACKGROUND, varargin{:});
         end
     end
 

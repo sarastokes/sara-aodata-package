@@ -1,4 +1,4 @@
-classdef PhysiologyExperiment < sara.Experiment
+classdef PhysiologyExperiment < sara.experiments.Experiment
 
     properties (Transient, SetAccess = protected)
         stimLog
@@ -17,7 +17,7 @@ classdef PhysiologyExperiment < sara.Experiment
 
     methods
         function obj = PhysiologyExperiment(name, homeDirectory, expDate, varargin)
-            obj = obj@sara.Experiment(name, homeDirectory, expDate, varargin{:});
+            obj = obj@sara.experiments.Experiment(name, homeDirectory, expDate, varargin{:});
         end
 
         function value = get.visualStimuli(obj)

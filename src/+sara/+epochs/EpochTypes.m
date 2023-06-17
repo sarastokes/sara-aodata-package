@@ -10,7 +10,7 @@ classdef EpochTypes
 
     methods
         function tf = isPhysiology(obj)
-            import sara.EpochTypes;
+            import sara.epochs.EpochTypes;
             switch obj
                 case {EpochTypes.SPECTRAL, EpochTypes.SPATIAL}
                     tf = true;
@@ -20,7 +20,7 @@ classdef EpochTypes
         end
 
         function value = numChannels(obj)
-            if obj == sara.EpochTypes.ANATOMYONECHANNEL
+            if obj == sara.epochs.EpochTypes.ANATOMYONECHANNEL
                 value = 1;
             else
                 value = 2;
@@ -30,22 +30,22 @@ classdef EpochTypes
 
     methods (Static)
         function obj = init(eType)
-            if isa(eType, sara.EpochTypes)
+            if isa(eType, sara.epochs.EpochTypes)
                 obj = eType;
                 return 
             end
 
             switch lower(eType)
                 case 'spectral'
-                    obj = sara.EpochTypes.SPECTRAL;
+                    obj = sara.epochs.EpochTypes.SPECTRAL;
                 case 'spatial'
-                    obj = sara.EpochTypes.SPATIAL;
+                    obj = sara.epochs.EpochTypes.SPATIAL;
                 case 'anatomy1'
-                    obj = sara.EpochTypes.ANATOMYONECHANNEL;
+                    obj = sara.epochs.EpochTypes.ANATOMYONECHANNEL;
                 case 'anatomy2'
-                    obj = sara.EpochTypes.ANATOMYTWOCHANNEL;
+                    obj = sara.epochs.EpochTypes.ANATOMYTWOCHANNEL;
                 case 'background'
-                    obj = sara.EpochTypes.BACKGROUND;
+                    obj = sara.epochs.EpochTypes.BACKGROUND;
                 otherwise
                     error('Unrecognized epoch type: %s', eType);
             end
