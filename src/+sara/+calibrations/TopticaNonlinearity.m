@@ -89,8 +89,8 @@ classdef TopticaNonlinearity < aod.core.Calibration
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
-            value = getLabel@aod.core.Calibration(obj);
+        function value = specifyLabel(obj)
+            value = specifyLabel@aod.core.Calibration(obj);
             value = value + sprintf("%unm", obj.laserLine);
         end
     end

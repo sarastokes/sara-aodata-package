@@ -27,8 +27,8 @@ classdef LEDPower < aod.builtin.calibrations.PowerMeasurement
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
-            value = getLabel@aod.builtin.calibrations.PowerMeasurement(obj);
+        function value = specifyLabel(obj)
+            value = specifyLabel@aod.builtin.calibrations.PowerMeasurement(obj);
             ndf = obj.getAttr('NDF');
             value = value + sprintf("_ND%.1f", ndf);
         end

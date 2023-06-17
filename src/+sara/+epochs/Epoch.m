@@ -187,7 +187,7 @@ classdef Epoch < aod.core.Epoch
             videoName = obj.getExptFile('AnalysisVideo');
         end
 
-        function value = getLabel(obj)
+        function value = specifyLabel(obj)
             value = [obj.Parent.label + "#" + int2fixedwidthstr(obj.ID, 4)];
         end
     end 

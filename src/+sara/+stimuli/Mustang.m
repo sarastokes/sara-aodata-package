@@ -20,7 +20,7 @@ classdef Mustang < aod.builtin.stimuli.ImagingLight
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
+        function value = specifyLabel(obj)
             value = sprintf('Mustang%u', round(obj.intensity));
         end
     end

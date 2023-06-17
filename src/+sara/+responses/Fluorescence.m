@@ -21,8 +21,8 @@ classdef Fluorescence < aod.builtin.responses.RegionResponse
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
-            value = sprintf('Epoch%u_Fluorescence', obj.Parent.ID);
+        function value = specifyLabel(obj)
+            value = sprintf("Epoch%u_Fluorescence", obj.Parent.ID);
         end
     end
 end 

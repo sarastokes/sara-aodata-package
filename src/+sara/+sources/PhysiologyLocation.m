@@ -42,7 +42,7 @@ classdef PhysiologyLocation < aod.core.sources.Location
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
+        function value = specifyLabel(obj)
             if ~isempty(obj.Parent)
                 value = [obj.Parent.label, obj.Name(1)];
             else

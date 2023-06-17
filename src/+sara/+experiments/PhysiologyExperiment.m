@@ -160,7 +160,7 @@ classdef PhysiologyExperiment < sara.experiments.Experiment
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
+        function value = specifyLabel(obj)
             value = [obj.Sources.label + "_" + string(obj.experimentDate)];
         end
     end

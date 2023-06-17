@@ -83,7 +83,7 @@ classdef MaxwellianView < aod.core.Calibration
     end
 
     methods (Access = protected)
-        function value = getLabel(obj)
+        function value = specifyLabel(obj)
             value = ['LedCalibration', char(obj.calibrationDate)];
         end
     end
