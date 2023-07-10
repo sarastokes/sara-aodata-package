@@ -20,7 +20,7 @@ classdef Toptica < aod.builtin.devices.LightSource
     methods
         function obj = Toptica(laserLine, varargin)
             obj = obj@aod.builtin.devices.LightSource(laserLine,...
-                'Manufacturer', "Toptica", 'Model', "iChrome MLE",...
+                'Manufacturer', "Toptica Photonics", 'Model', "iChrome MLE",...
                 varargin{:});
 
             ip = aod.util.InputParser();
@@ -32,6 +32,7 @@ classdef Toptica < aod.builtin.devices.LightSource
                 obj.setDescription('Borrowed from Hunter lab');
             else
                 obj.laserLines = [480, 515, 561, 630];
+                obj.setAttr('SerialNumber', "30130");
             end
             %assert(ismember(laserLine, obj.laserLines), 'Invalid laser line');
             

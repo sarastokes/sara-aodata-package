@@ -1,8 +1,19 @@
 classdef Registrations 
 
     methods (Static)
+        function nOmittedMask = getTotalOmissions(expt, epochIDs)
+            if nargin < 2
+                epochIDs = expt.epochIDs;
+            end
+            
+            epochDsets = expt.getByEpoch(epochIDs, "EpochDataset",...
+                {'GroupName', 'MotionDetection'});
+            allMasks = getProp(epochDsets, "omissionMask");
+            nOmittedMask = sum(double(allMasks), 3);
+        end
+
         function imStack = apply(registration, imStack, varargin)
-            tform = registration.tform;
+            tform = registration.transform;
 
             if ismatrix(imStack)
                 refObj = imref2d([size(imStack, 1), size(imStack, 2)]);

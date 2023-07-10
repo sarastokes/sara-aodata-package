@@ -3,13 +3,14 @@ classdef TotalResponseByPixel < aod.core.Analysis
     properties (SetAccess = protected)
         waveType                string = string.empty()
         pixelResponse           double
+        omissionMask            double {mustBeInteger}
         stimulusConditions      
         allConditions      
         epochIDs                double 
         stats                   table = table.empty()
     end
 
-    properties (Transient, Access = protected)
+    properties (Transient, SetAccess = protected)
         Stimuli
     end
 
@@ -32,78 +33,94 @@ classdef TotalResponseByPixel < aod.core.Analysis
                 obj.Stimuli = obj.Parent.get('Stimulus', varargin{:});
             end
 
-            if isempty(stimuli)
+            if isempty(obj.Stimuli)
                 error('getEpochs:NoMatches',...
                     'No Matches were found for %s', obj.waveType);
             else
-                fprintf('\tIdentified %u stimuli\n', numel(stimuli));
+                fprintf('\tIdentified %u stimuli\n', numel(obj.Stimuli));
             end
 
-            obj.allConditions = stimuli.getAttr('temporalFrequency');
+            obj.allConditions = getAttr(obj.Stimuli, 'temporalFrequency');
             obj.stimulusConditions = sort(unique(obj.allConditions));
 
-            epochs = getParent(stimuli);
+            epochs = getParent(obj.Stimuli);
             obj.epochIDs = getProp(epochs, 'ID');
+
+            % Get epoch-specific metadata
+            obj.getOmissionMask();
         end 
 
+        function getOmissionMask(obj)
+            obj.omissionMask = sara.modules.Registrations.getTotalOmissions(...
+                obj.Parent, obj.epochIDs);
+        end
+
         function go(obj, varargin)
-            ip = aod.util.InputParser();
-            addParameter(ip, 'Padding', [], @(x)isnumeric && numel(x)==4);
-            parse(ip, varargin{:});
-
-            if ~ismember('Padding', ip.UsingDefaults)
-                obj.setAttr('Padding', ip.Results.Padding);
-                padding = ip.Results.Padding;
-            else
-                padding = obj.getAttr('Padding');
+            % Get the pixel responses per epoch
+            for i = 1:numel(obj.allConditions)
+                obj.calculate(i);
             end
+            
+            obj.getStats();
+        end
 
-            % Create the table
-            obj.stats = table(obj.allConditions', NaN(numel(obj.allConditions), 1),...
-                'VariableNames', {"Frequency", "Value"});
+        function getStats(obj)
+            obj.stats = table(...
+                obj.allConditions, NaN(size(obj.allConditions)),...
+                'VariableNames', ["Frequency", "Mean"]);
 
             for i = 1:numel(obj.allConditions)
-                obj.stats{i,"Value"} = mean(...
-                    obj.pixelResponse(padding(1)+1:end-padding(2), padding(3)+1:padding(4)), "all");
+                tmp = obj.pixelResponse(:,:,i);
+                obj.stats.Mean(i) = mean(tmp(obj.omissionMask==0), "all");
             end
+            obj.stats = sortrows(obj.stats, "Frequency");
         end
 
         function calculate(obj, idx)
-            epoch = obj.Parent.id2epoch(obj.epochIDs(i));
+            % Get the relevant parameters
+            bkgdWindow = obj.getAttr('BackgroundFrames');
+            [stimStart, stimStop] = sara.modules.Stimuli.getStimRange(obj.Stimuli(idx));
+            obj.setAttr('StimFrames', [stimStart, stimStop]);
+
+
+            epoch = obj.Parent.id2epoch(obj.epochIDs(idx));
             imStack = sara.modules.Epochs.loadAnalysisVideo(epoch);
-            if isempty(obj.pixelResponse)
-                obj.pixelResponse = zeros(size(imStack,1), size(imStack, 2), numel(obj.stimulusConditions));
+            if isempty(obj.pixelResponse) 
+                obj.pixelResponse = zeros(...
+                    size(imStack,1), size(imStack, 2),... 
+                    numel(obj.stimulusConditions));
             end
 
-            [stimStart, stimStop] = sara.modules.Stimuli.getStimRange(obj.Stimuli(idx));
-            windowTime = (stimStop-stimStart) / obj.Stimuli(idx).frameRate;
-
-            bkgd = squeeze(mean(imStack2(:,:,bkgdWindow(1):bkgdWindow(2)), 3));
-            resp = squeeze(mean(imStack2(:, :, window2idx(hzWindow)), 3));
+            bkgd = squeeze(mean(imStack(:,:,bkgdWindow(1):bkgdWindow(2)), 3, "omitnan"));
+            resp = squeeze(mean(imStack(:, :, window2idx([stimStart, stimStop])), 3, "omitnan"));
             obj.pixelResponse(:,:,idx) = resp - bkgd;
         end
     end
 
     % Move to module once working
     methods
-        function h = plot(obj)
-            h = axes('Parent', figure());
-            [G, groupNames] = findgroups(obj.allConditions);
-            meanValues = splitapply(@mean, obj.stats.Value/max(abs(obj.stats.Value)), G);
-            stdValues = splitapply(@std, obj.stats.Value/max(abs(obj.stats.Value)), G);
+        function ax = plot(obj)
+            [G, groupNames] = findgroups(obj.stats.Frequency);
+            meanValues = splitapply(@mean, obj.stats.Mean/max(abs(obj.stats.Mean)), G);
+            stdValues = splitapply(@std, obj.stats.Mean/max(abs(obj.stats.Mean)), G);
+            
+            ax = axes('Parent', figure());
+            hold(ax, 'on'); grid(ax, 'on');
             area(groupNames, meanValues,...
                 'FaceColor', hex2rgb('334de6'), 'FaceAlpha', 0.2,... 
                 'LineWidth', 2);
             errorbar(groupNames, meanValues, stdValues,...
-                'Marker', 'o', 'LineStyle', 'none',...
+                'Color', 'k', 'Marker', 'o',... 
+                'LineStyle', 'none', 'LineWidth', 1.5,...
                 'MarkerFaceColor', 'k', 'MarkerEdgeColor', 'k',...
                 'MarkerSize', 7);
-            xlabel('Temporal Frequency (Hz)'); xticks(groupNames);
-            xlim([0.2 100]); ylim([0 1]);
-            set(gca, 'XScale', 'log', 'Grid', 'on');
+            xlabel('Temporal Frequency (Hz)'); 
+            xticks(groupNames); yticks(0:0.5:1);
+            xlim([1 100]); ylim([0 1.1*max(meanValues+stdValues)]);
+            set(gca, 'XScale', 'log', 'XTickLabelRotation', 45);
             ylabel('Average dF (norm.)');
             title(sprintf('Temporal tuning (%s)', obj.waveType));
-            figPos(h.Parent, 0.75, 0.75);
+            figPos(ax.Parent, 0.65, 0.65);
             tightfig(gcf);
         end
     end
@@ -112,10 +129,11 @@ classdef TotalResponseByPixel < aod.core.Analysis
         function p = specifyAttributes()
             p = specifyAttributes@aod.core.Analysis();
 
-            p.add('BkgdWindow', [150 498], @(x) isnumeric(x) && numel(x) == 2,...
+            p.add('BackgroundFrames', [150 498], @(x) isnumeric(x) & numel(x) == 2,...
                 'Start and stop frames for calculating the baseline response');
-            p.add('Padding', [5 15 15 15], @(x) isnumeric(x) && numel(x) == 4,...
-                'Analysis window, left/right, top/bottom');
+            p.add('StimFrames', @(x) isnumeric(x) & numel(x) == 2);
+            %p.add('Padding', [5 15 15 15], @(x) isnumeric(x) && numel(x) == 4,...
+            %    'Analysis window, left/right, top/bottom');
         end
     end
 end 

@@ -95,7 +95,7 @@ classdef MotionDetection < aod.core.EpochDataset
 
         function imStack = loadData(obj)
             % Load data from epoch
-            imStack = sara.util.loadEpochVideo(obj.Parent);
+            imStack = sara.modules.Epochs.loadAnalysisVideo(obj.Parent);
         end
 
     end
@@ -104,8 +104,11 @@ classdef MotionDetection < aod.core.EpochDataset
         function value = specifyAttributes()
             value = specifyAttributes@aod.core.EpochDataset();
 
-            value.add('OmissionThreshold', 0.5, @(x) iswithin(x,0,1), ...
-                'Pixel omission threshold: % of timepoints at 0');
+            value.add("OmissionThreshold",...
+                "Default", 0.5,...
+                "Class", "double", "Size", "(1,1)",...
+                "Function", @(x) iswithin(x, 0, 1),...
+                "Description", "Threshold for pixel omission: percent of timepoints at 0");
         end
 
     end

@@ -64,7 +64,7 @@ classdef Chirp < sara.protocols.SpectralProtocol
             end
 
             if obj.reversed
-                stim = flipud(stim);
+                stim = fliplr(stim);
             end
 
             % Add pre time and tail time

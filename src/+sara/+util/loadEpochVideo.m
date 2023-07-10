@@ -28,7 +28,7 @@ function imStack = loadEpochVideo(epoch, varargin)
 
     videoName = ip.Results.Name;
 
-    sift = epoch.get('Registration', {'Name', 'SIFT'});
+    sift = epoch.get('Registration', {'GroupName', 'SIFT'});
 
     fprintf('Loading video for %u... ', epoch.ID);
     reader = aod.util.findFileReader(epoch.getExptFile(videoName));

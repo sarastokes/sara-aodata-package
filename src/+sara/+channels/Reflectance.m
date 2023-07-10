@@ -15,7 +15,8 @@ classdef Reflectance < sara.channels.Channel
     methods (Access = protected)
         function createChannel(obj)
             obj.add(aod.builtin.devices.LightSource(796, ...
-                'Manufacturer', "SuperLum"));
+                'Manufacturer', "SuperLum", "Model", "S790-G-I-15",...
+                "SerialNumber", "91"));
             obj.add(aod.builtin.devices.PMT('ReflectancePMT',...
                 "Manufacturer", "Hamamatsu"));
         end

@@ -43,15 +43,15 @@ function X = makeLEDStimulusFile(fName, X, ledObj)
     fprintf(fid, '[header]\r\n');
     fprintf(fid, 'functionality    = 1\r\n');
     
-    if isempty(ledObj)
-        fprintf(fid, 'lut1 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_660nm_20230525_1ndf.txt\r\n');
-        fprintf(fid, 'lut2 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_530nm_20230525_1ndf.txt\r\n');
-        fprintf(fid, 'lut3 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_420nm_20230525_1ndf.txt\r\n');
-    else
-        fprintf(fid, 'lut1 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT1'));
-        fprintf(fid, 'lut2 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT2'));
-        fprintf(fid, 'lut3 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT3'));
-    end
+    %if isempty(ledObj)
+        fprintf(fid, 'lut1 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_660nm_20230621_06ndf.txt\r\n');
+        fprintf(fid, 'lut2 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_530nm_20230621_06ndf.txt\r\n');
+        fprintf(fid, 'lut3 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\LUT_420nm_20230621_06ndf.txt\r\n');
+    %else
+    %    fprintf(fid, 'lut1 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT1'));
+    %    fprintf(fid, 'lut2 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT2'));
+    %    fprintf(fid, 'lut3 		= F:\\FunctionalImaging\\ExperimentParameters\\LUTs\\%s.txt\r\n', ledObj.files('LUT3'));
+    %end
         
 
     fprintf(fid, 'interval_value	= 2\r\n');

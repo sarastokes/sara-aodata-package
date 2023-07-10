@@ -153,9 +153,15 @@ classdef SpectralProtocolFactory < aod.util.Factory
                 if totalTime == 190
                     error('SpectralProtocolFactory: StepChirp not yet implemented');
                 end
+                if contains(fileName, 'reverse')
+                    reversed = true;
+                else
+                    reversed = false;
+                end
                 protocol = Chirp(obj.calibration,...
                     'PreTime', 20, 'StimTime', 100, 'TailTime', 40,...
-                    'BaseIntensity', baseIntensity);
+                    'Reverse', true, 'SpectralClass', spectralClass,...
+                    'BaseIntensity', baseIntensity,);
                 return
             end
 

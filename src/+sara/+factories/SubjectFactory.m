@@ -74,6 +74,7 @@ classdef SubjectFactory < aod.util.Factory
                     if strcmp(whichEye, 'OD')
                         subjectEye = aod.builtin.sources.primate.Eye('OD',...
                             'AxialLength', 16.56, nhpProps{:});
+                        subjectEye.setAttr('ContactLens', [12.2, 5.6, 1]);
                         subjectEye.assignUUID("bc7aea0b-ada1-42c1-8f45-695dfb664861");
                         animal.add(subjectEye);
                         
@@ -119,7 +120,8 @@ classdef SubjectFactory < aod.util.Factory
                     if strcmp(whichEye, 'OD')
                         subjectEye = aod.builtin.sources.primate.Eye('OD',...
                             'AxialLength', 16.88, nhpProps{:});
-                        subjectEye.assignUUID("5c6327dd-52b5-4832-88f4-a3e3977258e9")
+                        subjectEye.assignUUID("5c6327dd-52b5-4832-88f4-a3e3977258e9");
+                        subjectEye.setAttr('ContactLens', [12.2, 5.6, -2]);
                         animal.add(subjectEye);
 
                         % Add location, if standardized
@@ -137,7 +139,7 @@ classdef SubjectFactory < aod.util.Factory
                     else
                         subjectEye = aod.builtin.sources.primate.Eye('OS',...
                             'AxialLength', 16.97, nhpProps{:});
-                        subjectEye.setAttr('ContactLens', "12.2mm/5.8mm/plano");
+                        subjectEye.setAttr('ContactLens', [12.2, 5.8, 0]);%"12.2mm/5.8mm/plano");
                         subjectEye.assignUUID("5e8118e0-a165-4c4f-a261-47fb31e9059c");
                         animal.add(subjectEye);
                         

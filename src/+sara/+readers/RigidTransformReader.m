@@ -65,5 +65,12 @@ classdef RigidTransformReader < aod.common.FileReader
             out = obj.Data;
         end
     end
+
+    methods (Static)
+        function out = read(fName)
+            obj = sara.readers.RigidTransformReader(fName);
+            out = obj.readFile();
+        end
+    end
     
 end

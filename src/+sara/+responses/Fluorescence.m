@@ -24,5 +24,6 @@ classdef Fluorescence < aod.builtin.responses.RegionResponse
         function value = specifyLabel(obj)
             value = sprintf("Epoch%u_Fluorescence", obj.Parent.ID);
         end
+
     end
 end 

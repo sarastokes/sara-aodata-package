@@ -30,4 +30,11 @@ classdef SpatialFrameTableReader < aod.common.FileReader
             obj.frameRate = 1000/mean(T.TimeInterval);
         end
     end
+
+    methods (Static)
+        function out = read(fName)
+            obj = sara.readers.SpatialFrameTableReader(fName);
+            out = obj.readFile();
+        end
+    end
 end

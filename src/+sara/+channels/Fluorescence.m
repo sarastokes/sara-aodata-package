@@ -51,8 +51,7 @@ classdef Fluorescence < sara.channels.Channel
             obj.add(aod.builtin.devices.PMT('VisiblePMT', ...
                 'Manufacturer', "Hamamatsu", 'Model', "H16722"));
             if strcmp(laserName, 'Mustang')
-                obj.add(aod.builtin.devices.LightSource(488, ...
-                    'Manufacturer', "Qioptiq", 'Model', "Mustang"));
+                obj.add(sara.devices.Mustang());
                 obj.addBandpassFilter('517_20');
             else
                 obj.add(sara.devices.Toptica(laserLine));
@@ -64,8 +63,9 @@ classdef Fluorescence < sara.channels.Channel
         function value = specifyAttributes()
             value = specifyAttributes@sara.channels.Channel();
 
-            value.add('Fluorophore', [], @isstring,...
-                'Fluorophore being imaged by the channel');
+            value.add("Fluorophore",...
+                "Class", "string", "Size", "(1,1)",...
+                "Description", "Fluorphore being imaged by the channel");
         end
     end
 end 

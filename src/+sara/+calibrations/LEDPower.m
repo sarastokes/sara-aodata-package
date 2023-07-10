@@ -38,7 +38,9 @@ classdef LEDPower < aod.builtin.calibrations.PowerMeasurement
         function value = specifyAttributes()
             value = specifyAttributes@aod.builtin.calibrations.PowerMeasurement();
             
-            value.add('NDF', 0, @(x) isnumeric(x), "Neutral density filter");
+            value.add("NDF",...
+                "Class", "double", "Size", "(1,1)", "Default", 0,...
+                "Description", "Neutral density filter present");
         end
     end
 end

@@ -1,4 +1,9 @@
 classdef WavefrontSensing < sara.channels.Channel 
+% Wavefront sensing channel on the 1P primate system
+%
+% Constructor:
+%   obj = sara.channels.WavefrontSensing()
+
 % By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
