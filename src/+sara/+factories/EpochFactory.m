@@ -1,16 +1,28 @@
-classdef EpochFactory < aod.util.Factory 
+classdef EpochFactory < aod.util.Factory
+% EPOCHFACTORY
+%
+% Superclasses:
+%   aod.util.Factory
+%
+% Description:
+%   Creates different epoch types for the Williams/Merigan lab systems
+
+
+% By Sara Patterson, 2023 (sara-aodata-package)
+% -------------------------------------------------------------------------
 
     methods
         function obj = EpochFactory()
             % Do nothing
         end
 
-        function ep = get(~, EXPT, epochID, epochType, source, system)
+        function ep = get(~, EXPT, epochID, epochClass, source, system)
 
-            if epochType == sara.epochs.EpochTypes.BACKGROUND
+            if endsWith(epochClass, 'Background')
                 ep = sara.epochs.BackgroundEpoch(epochID);
             else
-                ep = sara.epochs.Epoch(epochID, epochType);
+                fcn = str2func(sprintf(['@(ID) ', epochClass, '(ID)')]);
+                ep = fcn(ID);
             end
             EXPT.add(ep);
 
@@ -39,7 +51,7 @@ classdef EpochFactory < aod.util.Factory
                 reader = sara.readers.EpochParameterReader(ep.getExptFile('ImagingParams'));
                 ep = reader.readFile(ep);
             end
-            
+
             % Add stimuli defined in epoch attributes
             if epochType.isPhysiology()
                 if hasAttr(ep, 'AOM1')
@@ -59,7 +71,7 @@ classdef EpochFactory < aod.util.Factory
             % Add stimuli, if necessary
             if epochType == sara.epochs.EpochTypes.SPECTRAL
                 protocol = sara.factories.SpectralProtocolFactory.create(...
-                    EXPT.get('Calibration', {'Class', 'sara.calibrations.MaxwellianView'}),... 
+                    EXPT.get('Calibration', {'Class', 'sara.calibrations.MaxwellianView'}),...
                     ep.getAttr('StimulusName'));
                 stim = sara.stimuli.SpectralStimulus(protocol);
                 stim.loadVoltages(ep.getExptFile('LedVoltages'));
@@ -75,7 +87,7 @@ classdef EpochFactory < aod.util.Factory
         end
     end
 
-    methods 
+    methods
         function ep = addStripRegistration(ep)
             if ep.hasFile('RegMotion')
                 reg = aod.builtin.registrations.StripRegistration();
@@ -95,4 +107,4 @@ classdef EpochFactory < aod.util.Factory
             end
         end
     end
-end 
+end

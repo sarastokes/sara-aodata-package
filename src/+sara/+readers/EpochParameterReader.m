@@ -4,15 +4,17 @@ classdef EpochParameterReader < aod.util.readers.TxtReader
 % Description:
 %   Reads epoch parameter files and makes according adjustments to epoch
 %
-% Parent:
+% Superclasses:
 %   aod.util.readers.TxtReader
 %
 % Syntax:
-%   obj = EpochParameterReader(fileName)
+%   obj = sara.readers.EpochParameterReader(fileName)
 %
 % Notes:
 %   readFile() requires an Epoch as an input - attributes will be directly
 %   assigned to the epoch to reduce complexity of passing them back
+
+% By Sara Patterson, 2023 (sara-aodata-package)
 % -------------------------------------------------------------------------
 
     methods
@@ -35,24 +37,36 @@ classdef EpochParameterReader < aod.util.readers.TxtReader
             txt = strsplit(txt, ' x ');
             ep.setAttr('FieldOfView', [str2double(txt{1}), str2double(txt{2})]);
 
-            % Imaging window
+            % Fluorescence imaging window
             x = obj.readNumber('ImagingWindowX = ');
             y = obj.readNumber('ImagingWindowY = ');
             dx = obj.readNumber('ImagingWindowDX = ');
             dy = obj.readNumber('ImagingWindowDY = ');
-            ep.setAttr('ImagingWindow', [x y dx dy]);
+            ep.setAttr('FluorescenceImagingWindow', [x y dx dy]);
 
+            % Reflectance imaging window
+            x = obj.readNumber('ReflectanceWindowX = ');
+            y = obj.readNumber('ReflectanceWindowY = ');
+            dx = obj.readNumber('ReflectanceWindowDX = ');
+            dy = obj.readNumber('ReflectanceWindowDY = ');
+            ep.setAttr('ReflectanceImagingWindow', [x y dx dy]);
+
+            if ep.isExpected('IntervalValue', 'attribute')
+                ep.setAttr('IntervalValue', value);
+                ep.setAttr('IntervalUnit', obj.readText('Interval unit = '));
+            end
             
             % Channel parameters
-            ep.setAttr('RefGain', obj.readNumber('ADC channel 1, gain = '));
-            ep.setAttr('VisGain', obj.readNumber('ADC channel 2, gain = '));
-            ep.setAttr('RefOffset', obj.readNumber('ADC channel 1, offset = '));
-            ep.setAttr('VisOffset', obj.readNumber('ADC channel 2, offset = '));
-            ep.setAttr('RefPmtGain', obj.readNumber('Reflectance PMT gain  = '));
-            ep.setAttr('VisPmtGain', obj.readNumber('Fluorescence PMT gain = '));
-            ep.setAttr('AOM1', obj.readNumber('AOM_VALUE1 = '));
-            ep.setAttr('AOM2', obj.readNumber('AOM_VALUE2 = '));
-            ep.setAttr('AOM3', obj.readNumber('AOM_VALUE3 = '));
+            ep.setAttr('ReflectanceAdcGain', obj.readNumber('ADC channel 1, gain = '));
+            ep.setAttr('FluorescenceAdcGain', obj.readNumber('ADC channel 2, gain = '));
+            ep.setAttr('ReflectanceAdcOffset', obj.readNumber('ADC channel 1, offset = '));
+            ep.setAttr('FluorescenceAdcOffset', obj.readNumber('ADC channel 2, offset = '));
+            ep.setAttr('ReflectancePmtGain', obj.readNumber('Reflectance PMT gain  = '));
+            ep.setAttr('FluorescencePmtGain', obj.readNumber('Fluorescence PMT gain = '));
+            ep.setAttr('ImagingLightIntensity', obj.readNumber('AOM_VALUE1 = '));
+            if ep.isExpected('SpatialStimulusIntensity', 'attribute')
+                ep.setAttr('SpatialStimulusIntensity', obj.readNumber('AOM_VALUE3 = '));
+            end
         end
     end
 

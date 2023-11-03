@@ -20,14 +20,15 @@ classdef Chirp < sara.protocols.SpectralProtocol
 %   tailTime
 %   baseIntensity
 %
-% Reference:
-%   Baden et al (2016) Nature
-% -------------------------------------------------------------------------
+
+% By Sara Patterson, 2023 (sara-aodata-package)
+% --------------------------------------------------------------------------
 
     properties
         startFreq
         stopFreq
         reversed
+        square
     end
 
     methods
@@ -41,14 +42,14 @@ classdef Chirp < sara.protocols.SpectralProtocol
             addParameter(ip, 'StartFreq', 0.5, @isnumeric);
             addParameter(ip, 'StopFreq', 30, @isnumeric);
             addParameter(ip, 'Reversed', false, @islogical);
+            addParameter(ip, 'Square', false, @islogical);
             parse(ip, varargin{:});
 
             obj.startFreq = ip.Results.StartFreq;
             obj.stopFreq = ip.Results.StopFreq;
             obj.reversed = ip.Results.Reversed;
+            obj.square = ip.Results.Square;
 
-            % Overwrites
-            obj.contrast = 1;
         end
         
         function stim = generate(obj)
@@ -57,10 +58,18 @@ classdef Chirp < sara.protocols.SpectralProtocol
             hzPerSec = obj.stopFreq / obj.stimTime;
 
             stim = zeros(1, chirpPts);
-            for i = 1:chirpPts
-                x = i*sampleTime;
-                stim(i) = sin(pi*hzPerSec*x^2)...
-                    * obj.baseIntensity + obj.baseIntensity;
+            if obj.square
+                for i = 1:chirpPts
+                    x = i*sampleTime;
+                    stim(i) = obj.contrast * sign(sin(pi*hzPerSec*x^2))...
+                        * obj.baseIntensity + obj.baseIntensity;
+                end
+            else
+                for i = 1:chirpPts
+                    x = i*sampleTime;
+                    stim(i) = obj.contrast * sin(pi*hzPerSec*x^2)...
+                        * obj.baseIntensity + obj.baseIntensity;
+                end
             end
 
             if obj.reversed
@@ -87,9 +96,18 @@ classdef Chirp < sara.protocols.SpectralProtocol
             else
                 stimName = 'chirp';
             end
+            if obj.square
+                stimName = ['square_', stimName];
+            end
+
+            if obj.contrast ~= 1
+                stimContrast = sprintf('%uc_', 100*obj.contrast);
+            else
+                stimContrast = '';
+            end
             
-            fName = sprintf('%s_%s_%us_%up_%ut',... 
-                lower(char(obj.spectralClass)), stimName, obj.stimTime,...
+            fName = sprintf('%s_%s_%s%us_%up_%ut',... 
+                lower(char(obj.spectralClass)), stimName, stimContrast, obj.stimTime,...
                 100*obj.baseIntensity, floor(obj.totalTime));
         end
     end
